@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---- Design tokens (Tailwind v4 CSS-first config) ---- */
+@theme {
+  --color-ivory: #f4f0e9;
+  --color-paper: #fbf9f4;
+  --color-ink: #1c1a17;
+  --color-taupe: #9a8c7a;
+  --color-stone: #6b6357;
+  --color-line: rgba(28, 26, 23, 0.14);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-kenburns: kenburns 22s ease-out forwards;
+  --animate-spin-slow: spin-slow 22s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
 }
 
+/* Fonts use `inline` so the next/font runtime variables resolve correctly */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f0e9;
+  color: #1c1a17;
+  font-family: var(--font-jost), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle film grain — matches the prewed photography vibe */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: #1c1a17;
+  color: #f4f0e9;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f0e9;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9bfae;
+}
+
+/* Tiny uppercase tracked label used across sections */
+@layer components {
+  .eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+    color: var(--color-stone);
+  }
+}
+
+@keyframes kenburns {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.16); }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
 }

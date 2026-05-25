@@ -1,0 +1,47 @@
+/**
+ * All site imagery in one place.
+ * - placeholder = true  → grayscale Picsum photos (good for previewing layout)
+ * - placeholder = false → your real photos from /public/images/
+ */
+const USE_PLACEHOLDERS = true;
+
+const pic = (seed: string, w: number, h: number) =>
+  `https://picsum.photos/seed/${seed}/${w}/${h}?grayscale`;
+
+const local = (name: string) => `/images/${name}`;
+
+export const images = USE_PLACEHOLDERS
+  ? {
+      cover: pic("hs-cover-07", 1400, 1900),
+      hero: pic("hs-hero-21", 1700, 1100),
+      bride: pic("hs-bride-12", 900, 1200),
+      groom: pic("hs-groom-04", 900, 1200),
+      story: [
+        pic("hs-story-31", 1000, 1250),
+        pic("hs-story-58", 1000, 1250),
+        pic("hs-story-77", 1000, 1250),
+      ],
+      gallery: [
+        pic("hs-g-01", 900, 1200),
+        pic("hs-g-02", 1200, 900),
+        pic("hs-g-03", 900, 1200),
+        pic("hs-g-04", 900, 900),
+        pic("hs-g-05", 1200, 900),
+        pic("hs-g-06", 900, 1200),
+      ],
+    }
+  : {
+      cover: local("cover.webp"),
+      hero: local("hero.webp"),
+      bride: local("bride.webp"),
+      groom: local("groom.webp"),
+      story: [local("story-1.webp"), local("story-2.webp"), local("story-3.webp")],
+      gallery: [
+        local("gallery-1.webp"),
+        local("gallery-2.webp"),
+        local("gallery-3.webp"),
+        local("gallery-4.webp"),
+        local("gallery-5.webp"),
+        local("gallery-6.webp"),
+      ],
+    };
