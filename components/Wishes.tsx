@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useGuest } from "@/hooks/useGuest";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { fetchWishes, submitWish, type Wish } from "@/lib/firestore";
 import MaskText from "@/components/ui/MaskText";
 import Button from "@/components/ui/Button";
 
@@ -11,41 +12,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const MAX = 280;
 const PAGE_SIZE = 3;
 
-type Wish = { name: string; message: string; at: number };
-
-// Placeholder wishes — replace with real ones if you'd like.
-const SAMPLE_WISHES: Wish[] = [
-  {
-    name: "Grandma Mei",
-    message:
-      "May your home always be filled with laughter, patience, and endless love. So proud of the two of you.",
-    at: 0,
-  },
-  {
-    name: "David & Clara",
-    message:
-      "Wishing you a lifetime of adventures together. Cheers to the beautiful journey that lies ahead!",
-    at: 0,
-  },
-  {
-    name: "Auntie Rosa",
-    message:
-      "Two wonderful souls becoming one. May your marriage be blessed abundantly, today and all the days after.",
-    at: 0,
-  },
-  {
-    name: "The Tan Family",
-    message:
-      "From the bottom of our hearts — congratulations. May every day together be sweeter than the last.",
-    at: 0,
-  },
-  {
-    name: "Marcus",
-    message:
-      "So incredibly happy for you both. Here's to forever and always. Can't wait to celebrate with you!",
-    at: 0,
-  },
-];
+// localStorage record of the wish submitted from THIS browser
+type MyWish = { name: string; message: string; at: number };
 
 function WishCard({
   wish,
@@ -103,23 +71,72 @@ function WishCard({
 
 export default function Wishes() {
   const guest = useGuest();
-  const { value, save, loaded } = useLocalStorage<Wish | null>(
+  const { value, save, loaded } = useLocalStorage<MyWish | null>(
     `wish:${guest.slug}`,
     null,
   );
+  const [name, setName] = useState(guest.name);
   const [message, setMessage] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const handleSubmit = () => {
-    const m = message.trim();
-    if (m.length < 3) return;
-    save({ name: guest.name, message: m, at: Date.now() });
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [loadingWishes, setLoadingWishes] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const [editing, setEditing] = useState(false);
+
+  // keep the name field in sync once the guest resolves from Firestore
+  useEffect(() => setName(guest.name), [guest.name]);
+
+  // load the public guestbook from Firestore on mount
+  useEffect(() => {
+    fetchWishes()
+      .then(setWishes)
+      .catch(() => {})
+      .finally(() => setLoadingWishes(false));
+  }, []);
+
+  const myWish = wishes.find((w) => w.id === guest.slug);
+
+  const startEditing = () => {
+    if (myWish) {
+      setName(myWish.name);
+      setMessage(myWish.message);
+    }
+    setError("");
+    setEditing(true);
   };
 
-  const list: { wish: Wish; mine?: boolean }[] = [
-    ...(value ? [{ wish: value, mine: true }] : []),
-    ...SAMPLE_WISHES.map((w) => ({ wish: w })),
-  ];
+  const handleSubmit = async () => {
+    const m = message.trim();
+    if (m.length < 3 || !name.trim() || sending) return;
+    setSending(true);
+    setError("");
+    try {
+      await submitWish(guest.slug, name.trim(), m);
+      const updated: Wish = {
+        id: guest.slug,
+        name: name.trim(),
+        message: m,
+        createdAt: new Date(),
+      };
+      // replace this guest's existing wish, or add it at the top
+      setWishes((w) => [updated, ...w.filter((x) => x.id !== guest.slug)]);
+      save({ name: name.trim(), message: m, at: Date.now() });
+      setEditing(false);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const alreadyWished = wishes.some((w) => w.id === guest.slug);
+
+  const list: { wish: Wish; mine?: boolean }[] = wishes.map((w) => ({
+    wish: w,
+    mine: w.id === guest.slug,
+  }));
 
   return (
     <section className="relative overflow-hidden bg-paper px-6 py-24 sm:px-10 sm:py-32">
@@ -161,9 +178,9 @@ export default function Wishes() {
           <div>
             <div className="border border-line bg-ivory p-8 sm:p-10 lg:sticky lg:top-24">
               <AnimatePresence mode="wait">
-                {!loaded ? (
+                {!loaded || loadingWishes ? (
                   <motion.div key="l" className="h-64" />
-                ) : value ? (
+                ) : (value || alreadyWished) && !editing ? (
                   <motion.div
                     key="d"
                     initial={{ opacity: 0, y: 16 }}
@@ -190,6 +207,13 @@ export default function Wishes() {
                     <p className="mt-6 text-[10px] uppercase tracking-[0.28em] text-stone/70">
                       One blessing per invitation
                     </p>
+                    <button
+                      type="button"
+                      onClick={startEditing}
+                      className="mt-5 text-[11px] uppercase tracking-[0.22em] text-stone underline decoration-stone/40 underline-offset-4 transition-colors duration-300 hover:text-ink"
+                    >
+                      Edit your wish
+                    </button>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -200,11 +224,14 @@ export default function Wishes() {
                     transition={{ duration: 0.5 }}
                   >
                     <p className="text-[11px] uppercase tracking-[0.3em] text-stone">
-                      Writing As
+                      Your Name
                     </p>
-                    <p className="mt-1 font-serif text-3xl italic text-ink sm:text-4xl">
-                      {guest.name}
-                    </p>
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value.slice(0, 80))}
+                      placeholder="Your name"
+                      className="mt-2 w-full border-b border-line bg-transparent pb-2 font-serif text-3xl italic text-ink outline-none transition-colors duration-300 placeholder:text-stone/40 focus:border-ink/60 sm:text-4xl"
+                    />
 
                     <p className="mt-6 text-[11px] uppercase tracking-[0.24em] text-stone">
                       Your Message
@@ -224,12 +251,16 @@ export default function Wishes() {
                       <Button
                         onClick={handleSubmit}
                         className={`w-full ${
-                          message.trim().length < 3
+                          message.trim().length < 3 || !name.trim() || sending
                             ? "pointer-events-none opacity-40"
                             : ""
                         }`}
                       >
-                        Send Your Blessing
+                        {sending
+                          ? "Sending…"
+                          : editing
+                            ? "Update Your Blessing"
+                            : "Send Your Blessing"}
                         <svg
                           width="13"
                           height="13"
@@ -242,6 +273,11 @@ export default function Wishes() {
                         </svg>
                       </Button>
                     </div>
+                    {error && (
+                      <p className="mt-4 text-center text-[12px] tracking-wide text-taupe">
+                        {error}
+                      </p>
+                    )}
                     <p className="mt-4 text-center text-[10px] uppercase tracking-[0.26em] text-stone/70">
                       One blessing per invitation
                     </p>
@@ -253,41 +289,53 @@ export default function Wishes() {
 
           {/* wishes wall */}
           <div>
-            {list.slice(0, visible).map((w, i) => (
-              <WishCard
-                key={`${w.wish.name}-${i}`}
-                wish={w.wish}
-                mine={w.mine}
-                index={i}
-              />
-            ))}
-
-            {visible < list.length ? (
-              <div className="mt-8 flex flex-col items-center gap-4">
-                <p className="text-[10px] uppercase tracking-[0.28em] text-stone/70">
-                  Showing {Math.min(visible, list.length)} of {list.length}{" "}
-                  wishes
-                </p>
-                <Button onClick={() => setVisible((v) => v + PAGE_SIZE)}>
-                  Show More Wishes
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </Button>
-              </div>
+            {loadingWishes ? (
+              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-stone/70">
+                Gathering wishes…
+              </p>
+            ) : list.length === 0 ? (
+              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-stone/70">
+                No wishes yet — be the first to leave one.
+              </p>
             ) : (
-              list.length > PAGE_SIZE && (
-                <p className="mt-7 text-center text-[10px] uppercase tracking-[0.3em] text-stone/60">
-                  ✦ {list.length} wishes in total ✦
-                </p>
-              )
+              <>
+                {list.slice(0, visible).map((w, i) => (
+                  <WishCard
+                    key={w.wish.id}
+                    wish={w.wish}
+                    mine={w.mine}
+                    index={i}
+                  />
+                ))}
+
+                {visible < list.length ? (
+                  <div className="mt-8 flex flex-col items-center gap-4">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-stone/70">
+                      Showing {Math.min(visible, list.length)} of {list.length}{" "}
+                      wishes
+                    </p>
+                    <Button onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+                      Show More Wishes
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </Button>
+                  </div>
+                ) : (
+                  list.length > PAGE_SIZE && (
+                    <p className="mt-7 text-center text-[10px] uppercase tracking-[0.3em] text-stone/60">
+                      ✦ {list.length} wishes in total ✦
+                    </p>
+                  )
+                )}
+              </>
             )}
           </div>
         </div>

@@ -47,9 +47,32 @@ export async function submitRsvp(input: Rsvp): Promise<void> {
   });
 }
 
-/** Add a public wish to the guestbook. */
-export async function submitWish(name: string, message: string): Promise<void> {
-  await addDoc(collection(db, "wishes"), {
+export type StoredRsvp = {
+  attending: boolean;
+  headcount: number;
+  message: string;
+};
+
+/** Read this guest's existing RSVP, or null if they haven't responded. */
+export async function fetchRsvp(slug: string): Promise<StoredRsvp | null> {
+  const snap = await getDoc(doc(db, "rsvps", slug));
+  if (!snap.exists()) return null;
+  const d = snap.data();
+  return {
+    attending: d.attending as boolean,
+    headcount: d.headcount as number,
+    message: (d.message as string) ?? "",
+  };
+}
+
+/** Create this guest's wish (doc id == slug → one wish per guest). */
+export async function submitWish(
+  slug: string,
+  name: string,
+  message: string,
+): Promise<void> {
+  await setDoc(doc(db, "wishes", slug), {
+    slug,
     name,
     message,
     createdAt: serverTimestamp(),

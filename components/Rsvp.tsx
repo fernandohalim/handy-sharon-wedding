@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useGuest } from "@/hooks/useGuest";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -9,6 +9,7 @@ import { wedding } from "@/lib/config";
 import MaskText from "@/components/ui/MaskText";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
+import { fetchRsvp, submitRsvp } from "@/lib/firestore";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -23,10 +24,71 @@ export default function Rsvp() {
 
   const [attending, setAttending] = useState<boolean | null>(null);
   const [pax, setPax] = useState(1);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(true);
+  const [editing, setEditing] = useState(false);
 
-  const handleSubmit = () => {
-    if (attending === null) return;
-    save({ attending, pax: attending ? pax : 0, at: Date.now() });
+  // Cross-browser lock: look up an existing RSVP in Firestore. If one exists,
+  // hydrate the confirmation view so the form can't be filled in again.
+  useEffect(() => {
+    if (guest.slug === "default") {
+      setChecking(false);
+      return;
+    }
+    setChecking(true);
+    let active = true;
+    fetchRsvp(guest.slug)
+      .then((r) => {
+        if (active && r) {
+          save({ attending: r.attending, pax: r.headcount, at: Date.now() });
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setChecking(false);
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guest.slug]);
+
+  const startEditing = () => {
+    if (!value) return;
+    setAttending(value.attending);
+    setPax(value.pax > 0 ? value.pax : 1);
+    setError("");
+    setEditing(true);
+  };
+
+  const handleSubmit = async () => {
+    if (attending === null || sending) return;
+    if (guest.slug === "default") {
+      setError(
+        "We couldn't identify your invitation. Please open the personal link we sent you.",
+      );
+      return;
+    }
+    setSending(true);
+    setError("");
+    try {
+      await submitRsvp({
+        slug: guest.slug,
+        name: guest.name,
+        attending,
+        headcount: attending ? pax : 0,
+        message: "",
+      });
+      // localStorage = this browser's "already responded" flag (drives the
+      // confirmation UI). The Firestore write above is the real record.
+      save({ attending, pax: attending ? pax : 0, at: Date.now() });
+      setEditing(false);
+    } catch {
+      setError("Something went wrong sending your response. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -79,9 +141,9 @@ export default function Rsvp() {
             {/* form / confirmation side */}
             <div className="p-8 sm:p-11">
               <AnimatePresence mode="wait">
-                {!loaded ? (
+                {!loaded || checking ? (
                   <motion.div key="load" className="h-72" />
-                ) : value ? (
+                ) : value && !editing ? (
                   <motion.div
                     key="done"
                     initial={{ opacity: 0, y: 16 }}
@@ -119,6 +181,13 @@ export default function Rsvp() {
                     <p className="mt-6 text-[10px] uppercase tracking-[0.28em] text-stone/70">
                       Your response has been recorded
                     </p>
+                    <button
+                      type="button"
+                      onClick={startEditing}
+                      className="mt-5 self-start text-[11px] uppercase tracking-[0.22em] text-stone underline decoration-stone/40 underline-offset-4 transition-colors duration-300 hover:text-ink"
+                    >
+                      Changed your mind? Edit response
+                    </button>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -222,12 +291,16 @@ export default function Rsvp() {
                       <Button
                         onClick={handleSubmit}
                         className={`w-full ${
-                          attending === null
+                          attending === null || sending
                             ? "pointer-events-none opacity-40"
                             : ""
                         }`}
                       >
-                        Send Response
+                        {sending
+                          ? "Sending…"
+                          : editing
+                            ? "Update Response"
+                            : "Send Response"}
                         <svg
                           width="13"
                           height="13"
@@ -240,6 +313,12 @@ export default function Rsvp() {
                         </svg>
                       </Button>
                     </div>
+
+                    {error && (
+                      <p className="mt-4 text-center text-[12px] tracking-wide text-taupe">
+                        {error}
+                      </p>
+                    )}
 
                     <p className="mt-5 text-center text-[10px] uppercase tracking-[0.26em] text-stone/70">
                       Kindly respond before the 1st of November, 2026
