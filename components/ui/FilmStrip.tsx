@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 function Perforations() {
   return (
@@ -14,17 +15,37 @@ function Perforations() {
 
 export default function FilmStrip({
   images,
-  speed = 46,
+  pxPerSecond = 60,
 }: {
   images: string[];
-  speed?: number;
+  pxPerSecond?: number;
 }) {
-  const Row = () => (
-    <div className="flex shrink-0">
-      {images.map((src, i) => (
+  const groupRef = useRef<HTMLDivElement>(null);
+  const [duration, setDuration] = useState(100);
+
+  // Repeat the list so one group always exceeds the viewport width —
+  // guarantees no empty gap appears at the loop seam.
+  const frames = [...images, ...images, ...images];
+
+  useEffect(() => {
+    const el = groupRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.offsetWidth;
+      if (w > 0) setDuration(w / pxPerSecond);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [pxPerSecond]);
+
+  const Group = ({ track }: { track?: boolean }) => (
+    <div ref={track ? groupRef : undefined} className="flex shrink-0">
+      {frames.map((src, i) => (
         <div
           key={i}
-          className="mx-1.5 aspect-[3/4] w-40 shrink-0 overflow-hidden sm:w-52"
+          className="mx-1.5 aspect-[3/4] w-36 shrink-0 overflow-hidden sm:w-52"
         >
           <img
             src={src}
@@ -41,12 +62,13 @@ export default function FilmStrip({
     <div className="overflow-hidden bg-ink py-1.5">
       <Perforations />
       <motion.div
-        className="flex py-3"
+        className="flex w-max py-3"
         animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: speed, ease: "linear", repeat: Infinity }}
+        transition={{ duration, ease: "linear", repeat: Infinity }}
       >
-        <Row />
-        <Row />
+        {/* two identical groups → translating exactly -50% loops seamlessly */}
+        <Group track />
+        <Group />
       </motion.div>
       <Perforations />
     </div>

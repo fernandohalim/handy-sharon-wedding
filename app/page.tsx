@@ -9,6 +9,11 @@ import OurStory from "@/components/OurStory";
 import CountdownBand from "@/components/CountdownBand";
 import EventDetails from "@/components/EventDetails";
 import { useGuest } from "@/hooks/useGuest";
+import Gallery from "@/components/Gallery";
+import Rsvp from "@/components/Rsvp";
+import Wishes from "@/components/Wishes";
+import Gift from "@/components/Gift";
+import Footer from "@/components/Footer";
 
 export default function Page() {
   const guest = useGuest();
@@ -36,7 +41,11 @@ export default function Page() {
           <OurStory />
           <CountdownBand />
           <EventDetails />
-          {/* Phase 3 → Gallery, RSVP, Wishes, Gift, Footer */}
+          <Gallery />
+          <Rsvp />
+          <Gift />
+          <Wishes />
+          <Footer />
         </>
       )}
     </main>

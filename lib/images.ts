@@ -24,10 +24,14 @@ export const images = USE_PLACEHOLDERS
       gallery: [
         pic("hs-g-01", 900, 1200),
         pic("hs-g-02", 1200, 900),
-        pic("hs-g-03", 900, 1200),
-        pic("hs-g-04", 900, 900),
-        pic("hs-g-05", 1200, 900),
-        pic("hs-g-06", 900, 1200),
+        pic("hs-g-03", 1000, 1000),
+        pic("hs-g-04", 900, 1300),
+        pic("hs-g-05", 1200, 800),
+        pic("hs-g-06", 1000, 1250),
+        pic("hs-g-07", 900, 1150),
+        pic("hs-g-08", 1100, 900),
+        pic("hs-g-09", 1000, 1000),
+        pic("hs-g-10", 950, 1300),
       ],
     }
   : {
@@ -35,7 +39,11 @@ export const images = USE_PLACEHOLDERS
       hero: local("hero.webp"),
       bride: local("bride.webp"),
       groom: local("groom.webp"),
-      story: [local("story-1.webp"), local("story-2.webp"), local("story-3.webp")],
+      story: [
+        local("story-1.webp"),
+        local("story-2.webp"),
+        local("story-3.webp"),
+      ],
       gallery: [
         local("gallery-1.webp"),
         local("gallery-2.webp"),
@@ -43,5 +51,9 @@ export const images = USE_PLACEHOLDERS
         local("gallery-4.webp"),
         local("gallery-5.webp"),
         local("gallery-6.webp"),
+        local("gallery-7.webp"),
+        local("gallery-8.webp"),
+        local("gallery-9.webp"),
+        local("gallery-10.webp"),
       ],
     };

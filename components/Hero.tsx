@@ -7,8 +7,6 @@ import { images } from "@/lib/images";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-// Fixed dust field (no hydration mismatch). Light motes sit over the
-// photo (right), darker ones over the ivory (left).
 const PARTICLES = [
   { x: "14%", y: "26%", s: 3, d: 11, delay: 0.0, drift: 30, c: "bg-ink/25" },
   { x: "22%", y: "62%", s: 5, d: 14, delay: 1.4, drift: 40, c: "bg-ink/15" },
@@ -55,7 +53,6 @@ export default function Hero() {
   const sx = useSpring(mvX, { stiffness: 55, damping: 18, mass: 0.6 });
   const sy = useSpring(mvY, { stiffness: 55, damping: 18, mass: 0.6 });
 
-  // depth layers
   const imgX = useTransform(sx, [-0.5, 0.5], [20, -20]);
   const imgY = useTransform(sy, [-0.5, 0.5], [20, -20]);
   const nameX = useTransform(sx, [-0.5, 0.5], [-12, 12]);
@@ -133,206 +130,194 @@ export default function Hero() {
         </span>
       </div>
 
-      <div className="relative z-10 mx-auto grid min-h-[100svh] max-w-[88rem] grid-cols-1 lg:grid-cols-12">
-        {/* LEFT */}
-        <div className="relative flex flex-col justify-between gap-14 px-7 pb-16 pt-24 sm:px-12 sm:pt-28 lg:col-span-7 lg:gap-8 lg:pl-20">
-          {/* metadata */}
-          <motion.div
-            className="flex items-center justify-between"
-            initial={{ opacity: 0, y: -14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease, delay: 0.7 }}
-          >
-            <span className="eyebrow">The Wedding Of</span>
-            <span className="flex items-center gap-3">
-              <motion.span
-                className="hidden h-px bg-ink/25 sm:block"
-                initial={{ width: 0 }}
-                animate={{ width: 64 }}
-                transition={{ duration: 1, ease, delay: 1 }}
-              />
-              <span className="eyebrow">No. 01</span>
-            </span>
-          </motion.div>
-
-          {/* names */}
-          <div className="relative">
-            {/* breathing ghost ampersand */}
+      <div className="relative z-10 mx-auto grid max-w-[88rem] grid-cols-1 lg:min-h-[100svh] lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto]">
+        {/* METADATA */}
+        <motion.div
+          className="flex items-center justify-between px-7 pb-2 pt-24 sm:px-12 lg:col-span-7 lg:row-start-1 lg:pb-0 lg:pl-20 lg:pr-12 lg:pt-28"
+          initial={{ opacity: 0, y: -14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: 0.7 }}
+        >
+          <span className="eyebrow">The Wedding Of</span>
+          <span className="flex items-center gap-3">
             <motion.span
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
-              style={{ x: ghostX, y: ghostY }}
+              className="hidden h-px bg-ink/25 sm:block"
+              initial={{ width: 0 }}
+              animate={{ width: 64 }}
+              transition={{ duration: 1, ease, delay: 1 }}
+            />
+            <span className="eyebrow">No. 01</span>
+          </span>
+        </motion.div>
+
+        {/* NAMES */}
+        <div className="relative flex items-center px-7 py-8 sm:px-12 lg:col-span-7 lg:row-start-2 lg:py-6 lg:pl-20 lg:pr-12">
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
+            style={{ x: ghostX, y: ghostY }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.6, delay: 1.2 }}
+          >
+            <motion.span
+              className="block font-serif text-[46vw] italic leading-none text-transparent [-webkit-text-stroke:1px_rgba(28,26,23,0.10)] lg:text-[26rem]"
+              animate={{ scale: [1, 1.045, 1], rotate: [0, 2.2, 0] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            >
+              &amp;
+            </motion.span>
+          </motion.span>
+
+          <motion.div style={{ x: nameX, y: nameY }} className="w-full">
+            <motion.p
+              className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.38em] text-stone"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1.6, delay: 1.2 }}
+              transition={{ duration: 1, delay: 0.9 }}
             >
               <motion.span
-                className="block font-serif text-[42vw] italic leading-none text-transparent [-webkit-text-stroke:1px_rgba(28,26,23,0.10)] lg:text-[26rem]"
-                animate={{ scale: [1, 1.045, 1], rotate: [0, 2.2, 0] }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                className="text-taupe"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
               >
-                &amp;
+                ✦
               </motion.span>
-            </motion.span>
+              We Are Getting Married
+            </motion.p>
 
-            <motion.div style={{ x: nameX, y: nameY }}>
-              <motion.p
-                className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.4em] text-stone"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.9 }}
-              >
+            <h1 className="relative font-serif font-light leading-[0.84] text-ink">
+              <RiseWord delay={1} className="text-[clamp(3.4rem,15vw,10rem)]">
+                {wedding.groom.name}
+              </RiseWord>
+              <span className="mt-1 flex items-center gap-3 pl-[12%] sm:gap-7">
                 <motion.span
-                  className="text-taupe"
-                  animate={{ rotate: 360 }}
+                  className="font-serif text-5xl italic text-taupe sm:text-7xl"
+                  initial={{ opacity: 0, scale: 0.3, rotate: -30 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  transition={{ duration: 1, ease, delay: 1.25 }}
+                >
+                  &amp;
+                </motion.span>
+                <RiseWord
+                  delay={1.15}
+                  className="text-[clamp(3.4rem,15vw,10rem)]"
+                >
+                  {wedding.bride.name}
+                </RiseWord>
+              </span>
+            </h1>
+          </motion.div>
+        </div>
+
+        {/* IMAGE */}
+        <div className="px-7 pb-2 sm:px-12 lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:p-0">
+          <div className="relative aspect-[4/5] w-full overflow-hidden lg:aspect-auto lg:h-full">
+            <motion.div
+              className="absolute inset-0 overflow-hidden"
+              initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+              animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              transition={{ duration: 1.4, ease, delay: 0.9 }}
+            >
+              <motion.div
+                className="absolute inset-0 scale-[1.14]"
+                style={{ x: imgX, y: imgY }}
+              >
+                <motion.div
+                  className="h-full w-full"
+                  animate={{ scale: [1, 1.1, 1] }}
                   transition={{
-                    duration: 14,
+                    duration: 22,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: "easeInOut",
                   }}
                 >
-                  ✦
-                </motion.span>
-                We Are Getting Married
-              </motion.p>
+                  <img
+                    src={images.hero}
+                    alt="Handy and Sharon"
+                    className="h-full w-full object-cover grayscale"
+                  />
+                </motion.div>
+              </motion.div>
 
-              <h1 className="relative font-serif font-light leading-[0.84] text-ink">
-                <RiseWord delay={1} className="text-[clamp(3.6rem,14vw,10rem)]">
-                  {wedding.groom.name}
-                </RiseWord>
-                <span className="mt-1 flex items-center gap-4 pl-[16%] sm:gap-7">
-                  <motion.span
-                    className="font-serif text-5xl italic text-taupe sm:text-7xl"
-                    initial={{ opacity: 0, scale: 0.3, rotate: -30 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    transition={{ duration: 1, ease, delay: 1.25 }}
-                  >
-                    &amp;
-                  </motion.span>
-                  <RiseWord
-                    delay={1.15}
-                    className="text-[clamp(3.6rem,14vw,10rem)]"
-                  >
-                    {wedding.bride.name}
-                  </RiseWord>
-                </span>
-              </h1>
-            </motion.div>
-          </div>
-
-          {/* bottom row */}
-          <motion.div
-            className="flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-10"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease, delay: 1.5 }}
-          >
-            <motion.div
-              style={{ x: secX, y: secY }}
-              className="border border-ink/15 p-1.5"
-            >
-              <div className="relative h-40 w-32 overflow-hidden sm:h-44 sm:w-36">
-                <motion.img
-                  src={images.gallery[2]}
-                  alt=""
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover grayscale"
-                  initial={{ scale: 1.3, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1.6, ease, delay: 1.7 }}
-                />
-              </div>
-            </motion.div>
-
-            <div className="flex-1">
-              <motion.span
-                className="block h-px bg-ink/30"
-                initial={{ width: 0 }}
-                animate={{ width: 48 }}
-                transition={{ duration: 1, ease, delay: 1.8 }}
-              />
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-stone">
-                Two hearts, one promise. We invite you to witness the beginning
-                of our forever.
-              </p>
-            </div>
-
-            <div className="sm:text-right">
-              <p className="text-[10px] uppercase tracking-[0.34em] text-stone">
-                Save the Date
-              </p>
-              <p className="mt-2 font-serif text-3xl text-ink sm:text-[2.6rem]">
-                {wedding.dateShort}
-              </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-stone">
-                {wedding.venue.area}
-              </p>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* RIGHT image */}
-        <div className="relative min-h-[56vh] lg:col-span-5 lg:min-h-0">
-          <motion.div
-            className="absolute inset-0 overflow-hidden"
-            initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
-            animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
-            transition={{ duration: 1.4, ease, delay: 0.9 }}
-          >
-            {/* mouse-parallax layer */}
-            <motion.div
-              className="absolute inset-0 scale-[1.14]"
-              style={{ x: imgX, y: imgY }}
-            >
-              {/* ken burns layer */}
               <motion.div
-                className="h-full w-full"
-                animate={{ scale: [1, 1.1, 1] }}
+                className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-ivory/25 to-transparent mix-blend-overlay"
+                animate={{ x: ["0%", "420%"] }}
                 transition={{
-                  duration: 22,
+                  duration: 7,
                   repeat: Infinity,
                   ease: "easeInOut",
+                  repeatDelay: 4,
                 }}
-              >
-                <img
-                  src={images.hero}
-                  alt="Handy and Sharon"
-                  className="h-full w-full object-cover grayscale"
-                />
-              </motion.div>
+              />
+              <div className="pointer-events-none absolute inset-4 border border-ivory/25" />
             </motion.div>
 
-            {/* light sweep */}
             <motion.div
-              className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-ivory/25 to-transparent mix-blend-overlay"
-              animate={{ x: ["0%", "420%"] }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 4,
-              }}
-            />
-
-            <div className="pointer-events-none absolute inset-4 border border-ivory/25" />
-          </motion.div>
-
-          {/* date stamp */}
-          <motion.div
-            className="absolute bottom-5 left-5 z-10 border border-ivory/40 bg-ink/25 px-4 py-2 backdrop-blur-sm"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease, delay: 2 }}
-          >
-            <span className="text-[10px] uppercase tracking-[0.3em] text-ivory">
-              Sydney · 2025
-            </span>
-          </motion.div>
+              className="absolute bottom-5 left-5 z-10 border border-ivory/40 bg-ink/25 px-4 py-2 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease, delay: 2 }}
+            >
+              <span className="text-[10px] uppercase tracking-[0.3em] text-ivory">
+                Sydney · 2025
+              </span>
+            </motion.div>
+          </div>
         </div>
+
+        {/* BOTTOM ROW */}
+        <motion.div
+          className="flex flex-col gap-7 px-7 pb-20 pt-8 sm:px-12 lg:col-span-7 lg:row-start-3 lg:flex-row lg:items-end lg:gap-10 lg:pb-14 lg:pl-20 lg:pr-12 lg:pt-0"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: 1.5 }}
+        >
+          {/* secondary image — desktop only */}
+          <motion.div
+            style={{ x: secX, y: secY }}
+            className="hidden shrink-0 border border-ink/15 p-1.5 lg:block"
+          >
+            <div className="relative h-44 w-36 overflow-hidden">
+              <motion.img
+                src={images.gallery[2]}
+                alt=""
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover grayscale"
+                initial={{ scale: 1.3, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1.6, ease, delay: 1.7 }}
+              />
+            </div>
+          </motion.div>
+
+          {/* verse */}
+          <div className="flex-1">
+            <motion.span
+              className="block h-px bg-ink/30"
+              initial={{ width: 0 }}
+              animate={{ width: 48 }}
+              transition={{ duration: 1, ease, delay: 1.8 }}
+            />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-stone">
+              Two hearts, one promise. We invite you to witness the beginning of
+              our forever.
+            </p>
+          </div>
+
+          {/* date */}
+          <div className="border-t border-ink/15 pt-5 lg:border-t-0 lg:pt-0 lg:text-right">
+            <p className="text-[10px] uppercase tracking-[0.34em] text-stone">
+              Save the Date
+            </p>
+            <p className="mt-2 font-serif text-3xl text-ink sm:text-[2.6rem]">
+              {wedding.dateShort}
+            </p>
+            <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-stone">
+              {wedding.venue.area}
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
