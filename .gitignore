@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# raw source assets (huge originals — processed versions live in /public)
+/prewed_photos
+
 # debug
 npm-debug.log*
 yarn-debug.log*

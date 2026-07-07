@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { wedding } from "@/lib/config";
-import { images } from "@/lib/images";
+import { coverVideo } from "@/lib/images";
 import type { Guest } from "@/lib/guests";
 import InviteButton from "@/components/ui/InviteButton";
 
@@ -60,12 +60,17 @@ export default function Cover({
       exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
       transition={{ duration: 1.1, ease }}
     >
-      {/* ---- Background photo ---- */}
+      {/* ---- Background film ---- */}
       <div className="absolute inset-0">
-        <img
-          src={images.cover}
-          alt=""
-          className="h-full w-full object-cover grayscale animate-kenburns"
+        <video
+          className="h-full w-full object-cover grayscale"
+          src={coverVideo.src}
+          poster={coverVideo.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
         />
         <div className="absolute inset-0 bg-ink/45" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/75 via-ink/15 to-ink/90" />

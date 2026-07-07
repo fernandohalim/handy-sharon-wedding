@@ -3,7 +3,7 @@
  * - placeholder = true  → grayscale Picsum photos (good for previewing layout)
  * - placeholder = false → your real photos from /public/images/
  */
-const USE_PLACEHOLDERS = true;
+const USE_PLACEHOLDERS = false;
 
 const pic = (seed: string, w: number, h: number) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}?grayscale`;
@@ -57,3 +57,12 @@ export const images = USE_PLACEHOLDERS
         local("gallery-10.webp"),
       ],
     };
+
+/**
+ * Cover background film — muted, autoplaying loop shown on the opening screen.
+ * Poster is a still frame used before the video loads / if it can't play.
+ */
+export const coverVideo = {
+  src: "/video/cover.mp4",
+  poster: "/images/cover-poster.webp",
+};
