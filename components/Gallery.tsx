@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { images } from "@/lib/images";
 import MaskText from "@/components/ui/MaskText";
+import { FloralSprig } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -64,7 +65,7 @@ function GalleryItem({
             src={src}
             alt={caption}
             loading="lazy"
-            className="h-full w-full object-cover grayscale transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
+            className="h-full w-full object-cover soft-tone transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
           />
         </div>
       </motion.div>
@@ -88,7 +89,7 @@ function GalleryItem({
 
 export default function Gallery() {
   return (
-    <section className="relative overflow-hidden bg-ink px-6 py-24 text-ivory sm:px-10 sm:py-32">
+    <section className="relative overflow-hidden bg-paper px-6 py-24 text-ink sm:px-10 sm:py-32">
       <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
         <motion.div
           className="flex items-center gap-3"
@@ -97,21 +98,21 @@ export default function Gallery() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="h-px w-7 bg-ivory/40" />
-          <span className="text-[11px] uppercase tracking-[0.4em] text-ivory/70">
+          <FloralSprig className="text-taupe" />
+          <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
             Moments Captured
           </span>
-          <span className="h-px w-7 bg-ivory/40" />
+          <FloralSprig flip className="text-taupe" />
         </motion.div>
 
         <MaskText
           as="h2"
           text="The Gallery"
-          className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ivory sm:text-6xl"
+          className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ink sm:text-6xl"
         />
 
         <motion.p
-          className="mt-6 max-w-md text-sm leading-relaxed text-ivory/55"
+          className="mt-6 max-w-md text-sm leading-relaxed text-stone"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

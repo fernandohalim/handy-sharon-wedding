@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { wedding } from "@/lib/config";
+import { FloralSprig, FloralTwig, FloralDivider } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -9,13 +10,24 @@ export default function Footer() {
   const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative overflow-hidden bg-ink px-6 py-24 text-ivory sm:py-32">
-      <div className="pointer-events-none absolute inset-4 border border-ivory/12 sm:inset-6" />
+    <footer className="relative overflow-hidden bg-paper px-6 py-24 text-ink sm:py-32">
+      <div className="pointer-events-none absolute inset-4 border border-line sm:inset-6" />
 
       <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+        {/* monogram */}
+        <motion.img
+          src="/images/logo.webp"
+          alt={`${wedding.groom.name} & ${wedding.bride.name} monogram`}
+          className="mb-8 h-20 w-auto opacity-90 sm:h-24"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 0.9, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease }}
+        />
+
         {/* ornament */}
         <div className="flex items-center gap-4">
-          <span className="h-px w-12 bg-ivory/25" />
+          <FloralSprig className="text-taupe" />
           <motion.span
             className="text-taupe"
             animate={{ rotate: 360 }}
@@ -23,11 +35,11 @@ export default function Footer() {
           >
             ✦
           </motion.span>
-          <span className="h-px w-12 bg-ivory/25" />
+          <FloralSprig flip className="text-taupe" />
         </div>
 
         <motion.p
-          className="mt-7 text-[11px] uppercase tracking-[0.42em] text-ivory/60"
+          className="mt-7 text-[11px] uppercase tracking-[0.42em] text-stone"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -48,7 +60,7 @@ export default function Footer() {
         </motion.h2>
 
         <motion.p
-          className="mt-7 max-w-md text-sm leading-relaxed text-ivory/55"
+          className="mt-7 max-w-md text-sm leading-relaxed text-stone"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -60,20 +72,20 @@ export default function Footer() {
 
         {/* date / venue */}
         <div className="mt-9 flex items-center gap-4">
-          <span className="h-px w-8 bg-ivory/25" />
+          <FloralTwig className="text-taupe" />
           <div className="text-center">
-            <p className="text-[11px] uppercase tracking-[0.34em] text-ivory/75">
+            <p className="text-[11px] uppercase tracking-[0.34em] text-ink">
               {wedding.dateShort}
             </p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-ivory/45">
+            <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-stone">
               {wedding.venue.area}
             </p>
           </div>
-          <span className="h-px w-8 bg-ivory/25" />
+          <FloralTwig flip className="text-taupe" />
         </div>
 
         {/* hashtag */}
-        <p className="mt-9 font-serif text-2xl italic text-ivory/80">
+        <p className="mt-9 font-serif text-2xl italic text-taupe">
           #HandyAndSharon
         </p>
 
@@ -90,12 +102,12 @@ export default function Footer() {
               rel="noreferrer"
               className="group flex flex-col items-center gap-1"
             >
-              <span className="text-[9px] uppercase tracking-[0.3em] text-ivory/40">
+              <span className="text-[9px] uppercase tracking-[0.3em] text-stone">
                 {s.label}
               </span>
-              <span className="relative text-[11px] uppercase tracking-[0.2em] text-ivory/80">
+              <span className="relative text-[11px] uppercase tracking-[0.2em] text-ink">
                 @{s.handle}
-                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ivory/60 transition-transform duration-500 ease-editorial group-hover:scale-x-100" />
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink/50 transition-transform duration-500 ease-editorial group-hover:scale-x-100" />
               </span>
             </a>
           ))}
@@ -108,7 +120,7 @@ export default function Footer() {
           aria-label="Back to top"
         >
           <motion.span
-            className="text-ivory/60"
+            className="text-stone"
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -123,18 +135,18 @@ export default function Footer() {
               <path d="M12 20V4M5 11l7-7 7 7" />
             </svg>
           </motion.span>
-          <span className="text-[9px] uppercase tracking-[0.32em] text-ivory/45 transition-colors duration-300 group-hover:text-ivory/80">
+          <span className="text-[9px] uppercase tracking-[0.32em] text-stone transition-colors duration-300 group-hover:text-ink">
             Back to Top
           </span>
         </button>
 
         {/* credit */}
         <div className="mt-12 flex w-full flex-col items-center gap-3">
-          <span className="h-px w-full max-w-xs bg-ivory/12" />
-          <p className="text-[10px] uppercase tracking-[0.3em] text-ivory/40">
+          <FloralDivider className="text-taupe/60" />
+          <p className="text-[10px] uppercase tracking-[0.3em] text-stone">
             An Invitation Crafted with Love
           </p>
-          <p className="text-[10px] uppercase tracking-[0.26em] text-ivory/30">
+          <p className="text-[10px] uppercase tracking-[0.26em] text-stone/70">
             © {wedding.year} · {wedding.groom.name} &amp; {wedding.bride.name}
           </p>
         </div>

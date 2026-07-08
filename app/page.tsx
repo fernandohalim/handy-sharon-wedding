@@ -16,7 +16,7 @@ import Gift from "@/components/Gift";
 import Footer from "@/components/Footer";
 
 export default function Page() {
-  const guest = useGuest();
+  const { guest } = useGuest();
   const [opened, setOpened] = useState(false);
 
   useEffect(() => {

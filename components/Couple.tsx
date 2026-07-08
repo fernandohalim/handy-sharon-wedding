@@ -7,6 +7,7 @@ import Reveal from "@/components/ui/Reveal";
 import MaskText from "@/components/ui/MaskText";
 import ImageReveal from "@/components/ui/ImageReveal";
 import Marquee from "@/components/ui/Marquee";
+import { FloralSprig, FloralTwig, FloralBud } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -36,7 +37,7 @@ function Person({
       {/* ghost name */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute -top-6 -z-10 font-serif text-[26vw] italic leading-[0.8] text-transparent [-webkit-text-stroke:1px_rgba(244,240,233,0.12)] lg:text-[14rem] ${
+        className={`pointer-events-none absolute -top-6 -z-10 font-serif text-[26vw] italic leading-[0.8] text-transparent [-webkit-text-stroke:1px_rgba(51,64,92,0.12)] lg:text-[14rem] ${
           flip ? "right-0" : "left-0"
         }`}
       >
@@ -60,7 +61,7 @@ function Person({
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-110px" }}
           transition={{ duration: 1, ease, delay: 0.2 }}
-          className={`relative z-10 border border-ivory/15 bg-ink p-8 sm:p-11 lg:absolute lg:top-1/2 lg:w-[44%] lg:-translate-y-1/2 ${
+          className={`relative z-10 border border-line bg-ivory p-8 sm:p-11 lg:absolute lg:top-1/2 lg:w-[44%] lg:-translate-y-1/2 ${
             flip ? "lg:left-0" : "lg:right-0"
           }`}
         >
@@ -68,8 +69,8 @@ function Person({
             <span className="font-serif text-5xl font-light italic text-taupe">
               {index}
             </span>
-            <span className="h-px w-10 bg-ivory/25" />
-            <span className="text-[11px] uppercase tracking-[0.35em] text-ivory/60">
+            <FloralTwig className="text-taupe" />
+            <span className="text-[11px] uppercase tracking-[0.35em] text-stone">
               {label}
             </span>
           </div>
@@ -77,24 +78,24 @@ function Person({
           <MaskText
             as="h3"
             text={fullName}
-            className="mt-6 font-serif text-4xl font-light leading-[1.05] text-ivory sm:text-5xl"
+            className="mt-6 font-serif text-4xl font-light leading-[1.05] text-ink sm:text-5xl"
           />
 
           <Reveal delay={0.15}>
-            <p className="mt-4 text-[11px] uppercase tracking-[0.22em] text-ivory/45">
+            <p className="mt-4 text-[11px] uppercase tracking-[0.22em] text-stone">
               {parents}
             </p>
-            <span className="mt-5 block h-px w-12 bg-ivory/25" />
-            <p className="mt-5 text-sm leading-relaxed text-ivory/70">{bio}</p>
+            <FloralBud className="mt-5 block text-taupe/80" />
+            <p className="mt-5 text-sm leading-relaxed text-stone">{bio}</p>
             <a
               href={`https://instagram.com/${instagram}`}
               target="_blank"
               rel="noreferrer"
-              className="group/ig mt-7 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ivory"
+              className="group/ig mt-7 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-ink"
             >
               <span className="relative">
                 @{instagram}
-                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ivory transition-transform duration-500 ease-editorial group-hover/ig:scale-x-100" />
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-500 ease-editorial group-hover/ig:scale-x-100" />
               </span>
               <svg
                 width="13"
@@ -117,7 +118,7 @@ function Person({
 export default function Couple() {
   return (
     <>
-      <section className="relative overflow-hidden bg-ink px-6 py-24 text-ivory sm:px-10 sm:py-36">
+      <section className="relative overflow-hidden bg-paper px-6 py-24 text-ink sm:px-10 sm:py-36">
         <div className="mx-auto max-w-6xl">
           {/* header */}
           <div className="flex flex-col items-center text-center">
@@ -128,19 +129,19 @@ export default function Couple() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="h-px w-7 bg-ivory/40" />
-              <span className="text-[11px] uppercase tracking-[0.4em] text-ivory/70">
+              <FloralSprig className="text-taupe" />
+              <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
                 With Joyful Hearts
               </span>
-              <span className="h-px w-7 bg-ivory/40" />
+              <FloralSprig flip className="text-taupe" />
             </motion.div>
             <MaskText
               as="h2"
               text="The Beloved Couple"
-              className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ivory sm:text-6xl"
+              className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ink sm:text-6xl"
             />
             <motion.p
-              className="mt-6 max-w-md text-sm leading-relaxed text-ivory/55"
+              className="mt-6 max-w-md text-sm leading-relaxed text-stone"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -9,6 +9,7 @@ import { wedding } from "@/lib/config";
 import MaskText from "@/components/ui/MaskText";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
+import { FloralSprig, FloralBud } from "@/components/ui/Floral";
 import { fetchRsvp, submitRsvp } from "@/lib/firestore";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -16,7 +17,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 type RsvpData = { attending: boolean; pax: number; at: number };
 
 export default function Rsvp() {
-  const guest = useGuest();
+  const { guest, status } = useGuest();
   const { value, save, loaded } = useLocalStorage<RsvpData | null>(
     `rsvp:${guest.slug}`,
     null,
@@ -103,11 +104,11 @@ export default function Rsvp() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="h-px w-7 bg-ink/30" />
+            <FloralSprig className="text-taupe" />
             <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
               Kindly Respond
             </span>
-            <span className="h-px w-7 bg-ink/30" />
+            <FloralSprig flip className="text-taupe" />
           </motion.div>
           <MaskText
             as="h2"
@@ -124,7 +125,7 @@ export default function Rsvp() {
               <img
                 src={images.gallery[5]}
                 alt=""
-                className="absolute inset-0 h-full w-full object-cover grayscale"
+                className="absolute inset-0 h-full w-full object-cover soft-tone"
               />
               <div className="absolute inset-0 bg-ink/25" />
               <div className="pointer-events-none absolute inset-4 border border-ivory/30" />
@@ -141,8 +142,37 @@ export default function Rsvp() {
             {/* form / confirmation side */}
             <div className="p-8 sm:p-11">
               <AnimatePresence mode="wait">
-                {!loaded || checking ? (
+                {status === "loading" || !loaded || checking ? (
                   <motion.div key="load" className="h-72" />
+                ) : guest.slug === "default" ? (
+                  <motion.div
+                    key="locked"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease }}
+                    className="flex flex-col"
+                  >
+                    <motion.span
+                      className="font-serif text-3xl text-taupe"
+                      initial={{ scale: 0, rotate: -40 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ duration: 0.8, ease, delay: 0.15 }}
+                    >
+                      ✦
+                    </motion.span>
+                    <h3 className="mt-4 font-serif text-3xl font-light text-ink sm:text-4xl">
+                      An Invitation Awaits
+                    </h3>
+                    <FloralBud className="mt-4 block text-taupe/80" />
+                    <p className="mt-5 text-sm leading-relaxed text-stone">
+                      This RSVP is reserved for our invited guests. Kindly open
+                      the personal invitation link we sent you to confirm your
+                      attendance.
+                    </p>
+                    <p className="mt-6 text-[10px] uppercase tracking-[0.28em] text-stone/70">
+                      One invitation, one RSVP
+                    </p>
+                  </motion.div>
                 ) : value && !editing ? (
                   <motion.div
                     key="done"
@@ -162,7 +192,7 @@ export default function Rsvp() {
                     <h3 className="mt-4 font-serif text-3xl font-light text-ink sm:text-4xl">
                       Thank You, {guest.name}
                     </h3>
-                    <span className="mt-4 block h-px w-12 bg-ink/25" />
+                    <FloralBud className="mt-4 block text-taupe/80" />
                     <p className="mt-5 text-sm leading-relaxed text-stone">
                       {value.attending
                         ? "We are overjoyed that you'll be celebrating with us. Your presence will make our day complete."

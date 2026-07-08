@@ -6,6 +6,12 @@ import Reveal from "@/components/ui/Reveal";
 import MaskText from "@/components/ui/MaskText";
 import ImageReveal from "@/components/ui/ImageReveal";
 import FilmStrip from "@/components/ui/FilmStrip";
+import {
+  FloralSprig,
+  FloralDivider,
+  FloralTwig,
+  FloralBud,
+} from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -74,7 +80,7 @@ function Chapter({
             <span className="font-serif text-5xl font-light italic text-taupe">
               {chapter.no}
             </span>
-            <span className="h-px w-10 bg-ink/25" />
+            <FloralTwig className="text-taupe" />
             <span className="text-[11px] uppercase tracking-[0.32em] text-stone">
               {chapter.year}
             </span>
@@ -87,7 +93,7 @@ function Chapter({
           />
 
           <Reveal delay={0.15}>
-            <span className="mt-5 block h-px w-12 bg-ink/25" />
+            <FloralBud className="mt-5 block text-taupe/80" />
             <p className="mt-5 text-sm leading-relaxed text-stone sm:text-[15px]">
               {chapter.text}
             </p>
@@ -110,11 +116,11 @@ export default function OurStory() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="h-px w-7 bg-ink/30" />
+          <FloralSprig className="text-taupe" />
           <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
             Our Journey
           </span>
-          <span className="h-px w-7 bg-ink/30" />
+          <FloralSprig flip className="text-taupe" />
         </motion.div>
         <MaskText
           as="h2"
@@ -148,7 +154,7 @@ export default function OurStory() {
       {/* closing line */}
       <div className="mx-auto mt-28 max-w-md px-6 text-center">
         <Reveal>
-          <span className="mx-auto block h-px w-10 bg-ink/30" />
+          <FloralDivider className="mx-auto text-taupe/80" />
           <p className="mt-6 font-serif text-2xl italic leading-relaxed text-ink sm:text-3xl">
             &ldquo;And so, the best chapter is about to begin.&rdquo;
           </p>

@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
-/* ---- Design tokens (Tailwind v4 CSS-first config) ---- */
+/* ---- Design tokens (Tailwind v4 CSS-first config) ----
+   Palette: soft pink & powder-blue pastels to match the couple's
+   floral wedding decor. `ink` is a deep dusty-navy used for text and
+   the few accent fills; `ivory`/`paper` are the airy blush + powder-blue
+   surfaces; `taupe` is the dusty-rose accent; `stone` a muted blue-grey. */
 @theme {
-  --color-ivory: #f4f0e9;
-  --color-paper: #fbf9f4;
-  --color-ink: #1c1a17;
-  --color-taupe: #9a8c7a;
-  --color-stone: #6b6357;
-  --color-line: rgba(28, 26, 23, 0.14);
+  --color-ivory: #eef2fb;
+  --color-paper: #fdf5f8;
+  --color-ink: #33405c;
+  --color-taupe: #c9789a;
+  --color-stone: #6f7891;
+  --color-line: rgba(51, 64, 92, 0.14);
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-kenburns: kenburns 22s ease-out forwards;
   --animate-spin-slow: spin-slow 22s linear infinite;
@@ -29,8 +33,8 @@ html {
 }
 
 body {
-  background-color: #f4f0e9;
-  color: #1c1a17;
+  background-color: #fdf5f8;
+  color: #33405c;
   font-family: var(--font-jost), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -48,18 +52,18 @@ body::before {
 }
 
 ::selection {
-  background: #1c1a17;
-  color: #f4f0e9;
+  background: #c9789a;
+  color: #fff;
 }
 
 ::-webkit-scrollbar {
   width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f4f0e9;
+  background: #fdf5f8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9bfae;
+  background: #d9b7c8;
 }
 
 /* Tiny uppercase tracked label used across sections */
@@ -69,6 +73,14 @@ body::before {
     text-transform: uppercase;
     letter-spacing: 0.42em;
     color: var(--color-stone);
+  }
+}
+
+/* Photos: gently desaturated so they stay cohesive with the pastel
+   palette without the harsh full black-and-white of the old theme. */
+@layer utilities {
+  .soft-tone {
+    filter: saturate(0.72) brightness(1.02) contrast(0.98);
   }
 }
 

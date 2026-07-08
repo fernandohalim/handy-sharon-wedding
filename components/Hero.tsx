@@ -139,15 +139,6 @@ export default function Hero() {
           transition={{ duration: 1, ease, delay: 0.7 }}
         >
           <span className="eyebrow">The Wedding Of</span>
-          <span className="flex items-center gap-3">
-            <motion.span
-              className="hidden h-px bg-ink/25 sm:block"
-              initial={{ width: 0 }}
-              animate={{ width: 64 }}
-              transition={{ duration: 1, ease, delay: 1 }}
-            />
-            <span className="eyebrow">No. 01</span>
-          </span>
         </motion.div>
 
         {/* NAMES */}
@@ -235,7 +226,7 @@ export default function Hero() {
                   <img
                     src={images.hero}
                     alt="Handy and Sharon"
-                    className="h-full w-full object-cover grayscale"
+                    className="h-full w-full object-cover soft-tone"
                   />
                 </motion.div>
               </motion.div>
@@ -283,7 +274,7 @@ export default function Hero() {
                 src={images.gallery[2]}
                 alt=""
                 loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover grayscale"
+                className="absolute inset-0 h-full w-full object-cover soft-tone"
                 initial={{ scale: 1.3, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1.6, ease, delay: 1.7 }}

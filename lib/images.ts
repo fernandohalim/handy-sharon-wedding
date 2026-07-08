@@ -55,6 +55,12 @@ export const images = USE_PLACEHOLDERS
         local("gallery-8.webp"),
         local("gallery-9.webp"),
         local("gallery-10.webp"),
+        local("gallery-11.webp"),
+        local("gallery-12.webp"),
+        local("gallery-13.webp"),
+        local("gallery-14.webp"),
+        local("gallery-15.webp"),
+        local("gallery-16.webp"),
       ],
     };
 

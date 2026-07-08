@@ -5,6 +5,7 @@ import { images } from "@/lib/images";
 import Reveal from "@/components/ui/Reveal";
 import SectionTitle from "@/components/ui/SectionTitle";
 import Button from "@/components/ui/Button";
+import { FloralBud } from "@/components/ui/Floral";
 
 export default function EventDetails() {
   return (
@@ -43,7 +44,7 @@ export default function EventDetails() {
                 <h3 className="font-serif text-2xl font-light text-ink sm:text-3xl">
                   {e.name}
                 </h3>
-                <span className="h-px w-10 bg-ink/25" />
+                <FloralBud className="text-taupe/80" />
                 <p className="text-[13px] uppercase tracking-[0.25em] text-stone">
                   {e.time}
                 </p>
@@ -60,7 +61,7 @@ export default function EventDetails() {
                 src={images.gallery[4]}
                 alt={wedding.venue.name}
                 loading="lazy"
-                className="h-full w-full object-cover grayscale"
+                className="h-full w-full object-cover soft-tone"
               />
             </div>
           </Reveal>

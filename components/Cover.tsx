@@ -5,6 +5,12 @@ import { wedding } from "@/lib/config";
 import { coverVideo } from "@/lib/images";
 import type { Guest } from "@/lib/guests";
 import InviteButton from "@/components/ui/InviteButton";
+import {
+  FloralSprig,
+  FloralTwig,
+  FloralSpray,
+  FrameCorner,
+} from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -32,19 +38,6 @@ function Rise({
   );
 }
 
-/* Editorial corner brackets for the inset frame */
-function Corners() {
-  const c = "absolute h-4 w-4 border-ivory/55";
-  return (
-    <>
-      <span className={`${c} left-0 top-0 border-l border-t`} />
-      <span className={`${c} right-0 top-0 border-r border-t`} />
-      <span className={`${c} bottom-0 left-0 border-b border-l`} />
-      <span className={`${c} bottom-0 right-0 border-b border-r`} />
-    </>
-  );
-}
-
 export default function Cover({
   guest,
   onOpen,
@@ -63,7 +56,7 @@ export default function Cover({
       {/* ---- Background film ---- */}
       <div className="absolute inset-0">
         <video
-          className="h-full w-full object-cover grayscale"
+          className="h-full w-full object-cover soft-tone"
           src={coverVideo.src}
           poster={coverVideo.poster}
           autoPlay
@@ -88,14 +81,20 @@ export default function Cover({
         transition={{ duration: 1.5, ease }}
       />
 
-      {/* ---- Ornamental frame ---- */}
+      {/* ---- Ornamental photo-frame border (double rule + ornate corners) ---- */}
       <motion.div
-        className="pointer-events-none absolute inset-5 border border-ivory/25 sm:inset-7"
+        className="pointer-events-none absolute inset-5 border border-ivory/40 sm:inset-7"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.6, ease, delay: 0.4 }}
       >
-        <Corners />
+        {/* inner rule */}
+        <div className="absolute inset-[7px] border border-ivory/25" />
+        {/* ornate corners */}
+        <FrameCorner className="absolute -left-2 -top-2 text-ivory/70" />
+        <FrameCorner className="absolute -right-2 -top-2 -scale-x-100 text-ivory/70" />
+        <FrameCorner className="absolute -bottom-2 -left-2 -scale-y-100 text-ivory/70" />
+        <FrameCorner className="absolute -bottom-2 -right-2 -scale-100 text-ivory/70" />
       </motion.div>
 
       {/* ---- Content ---- */}
@@ -107,11 +106,11 @@ export default function Cover({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.55 }}
         >
-          <span className="h-px w-8 bg-ivory/45" />
+          <FloralSprig className="text-ivory/70" />
           <p className="text-[10px] uppercase tracking-[0.42em] text-ivory/80 sm:text-[11px]">
             Together With Their Families
           </p>
-          <span className="h-px w-8 bg-ivory/45" />
+          <FloralSprig flip className="text-ivory/70" />
         </motion.div>
 
         {/* Center — names */}
@@ -165,6 +164,14 @@ export default function Cover({
             />
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.1, ease, delay: 1.45 }}
+          >
+            <FloralSpray className="mx-auto mt-5 text-ivory/65" />
+          </motion.div>
+
           <motion.p
             className="mt-2 text-[10px] uppercase tracking-[0.4em] text-ivory/55"
             initial={{ opacity: 0 }}
@@ -187,11 +194,11 @@ export default function Cover({
               This Invitation Is Prepared For
             </p>
             <div className="mt-2 flex items-center gap-3">
-              <span className="h-px w-5 bg-ivory/40" />
+              <FloralTwig className="text-ivory/60" />
               <p className="font-serif text-2xl italic text-ivory sm:text-3xl">
                 {guest.name}
               </p>
-              <span className="h-px w-5 bg-ivory/40" />
+              <FloralTwig flip className="text-ivory/60" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-xs leading-relaxed text-ivory/65 sm:text-sm">
               We joyfully invite you to share in our celebration of love.

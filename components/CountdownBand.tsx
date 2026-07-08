@@ -4,25 +4,26 @@ import { motion } from "motion/react";
 import { wedding } from "@/lib/config";
 import { images } from "@/lib/images";
 import Countdown from "@/components/Countdown";
+import { FloralDivider } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function CountdownBand() {
   return (
-    <section className="relative overflow-hidden bg-ink px-6 py-28 text-center text-ivory sm:py-36">
+    <section className="relative overflow-hidden bg-ivory px-6 py-28 text-center text-ink sm:py-36">
       <img
         src={images.gallery[0]}
         alt=""
         loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover opacity-25 grayscale"
+        className="absolute inset-0 h-full w-full object-cover opacity-30 soft-tone"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/85 via-ink/65 to-ink/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-ivory/85 via-ivory/55 to-ivory/90" />
       {/* texture — fine diagonal hatch */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(45deg, transparent 0 7px, rgba(244,240,233,0.035) 7px 8px)",
+            "repeating-linear-gradient(45deg, transparent 0 7px, rgba(51,64,92,0.04) 7px 8px)",
         }}
       />
       {/* texture — dot grid */}
@@ -30,7 +31,7 @@ export default function CountdownBand() {
         className="absolute inset-0 opacity-70"
         style={{
           backgroundImage:
-            "radial-gradient(rgba(244,240,233,0.05) 1px, transparent 1.4px)",
+            "radial-gradient(rgba(51,64,92,0.05) 1px, transparent 1.4px)",
           backgroundSize: "24px 24px",
         }}
       />
@@ -39,14 +40,14 @@ export default function CountdownBand() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(58% 48% at 50% 44%, rgba(154,140,122,0.18), transparent 72%)",
+            "radial-gradient(58% 48% at 50% 44%, rgba(201,120,154,0.18), transparent 72%)",
         }}
       />
-      <div className="pointer-events-none absolute inset-5 border border-ivory/15 sm:inset-8" />
+      <div className="pointer-events-none absolute inset-5 border border-ink/12 sm:inset-8" />
 
       <div className="relative mx-auto flex max-w-2xl flex-col items-center">
         <motion.p
-          className="eyebrow text-ivory/70"
+          className="eyebrow text-stone"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -66,12 +67,14 @@ export default function CountdownBand() {
           <span className="italic text-taupe">&ldquo;I Do&rdquo;</span>
         </motion.h2>
 
+        <FloralDivider className="mt-8 text-taupe/80" />
+
         <div className="mt-12">
-          <Countdown tone="dark" />
+          <Countdown tone="light" />
         </div>
 
         <motion.p
-          className="mt-12 text-[11px] uppercase tracking-[0.34em] text-ivory/65"
+          className="mt-12 text-[11px] uppercase tracking-[0.34em] text-stone"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

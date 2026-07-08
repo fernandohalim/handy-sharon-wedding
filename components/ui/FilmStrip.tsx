@@ -7,7 +7,7 @@ function Perforations() {
   return (
     <div className="flex justify-between px-1">
       {Array.from({ length: 26 }).map((_, i) => (
-        <span key={i} className="my-2 h-2 w-3 rounded-[2px] bg-ivory/12" />
+        <span key={i} className="my-2 h-2 w-3 rounded-[2px] bg-ink/12" />
       ))}
     </div>
   );
@@ -51,7 +51,7 @@ export default function FilmStrip({
             src={src}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover grayscale"
+            className="h-full w-full object-cover soft-tone"
           />
         </div>
       ))}
@@ -59,7 +59,7 @@ export default function FilmStrip({
   );
 
   return (
-    <div className="overflow-hidden bg-ink py-1.5">
+    <div className="overflow-hidden bg-ivory py-1.5">
       <Perforations />
       <motion.div
         className="flex w-max py-3"

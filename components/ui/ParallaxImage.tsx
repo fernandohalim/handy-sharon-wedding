@@ -28,7 +28,7 @@ export default function ParallaxImage({
         alt={alt}
         loading="lazy"
         style={{ y }}
-        className="absolute -top-[20%] left-0 h-[140%] w-full object-cover grayscale"
+        className="absolute -top-[20%] left-0 h-[140%] w-full object-cover soft-tone"
       />
     </div>
   );

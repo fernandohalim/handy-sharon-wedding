@@ -7,6 +7,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { fetchWishes, submitWish, type Wish } from "@/lib/firestore";
 import MaskText from "@/components/ui/MaskText";
 import Button from "@/components/ui/Button";
+import { FloralSprig, FloralTwig, FloralBud } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const MAX = 280;
@@ -56,7 +57,7 @@ function WishCard({
         {wish.message}
       </p>
       <div className="mt-5 flex items-center gap-3">
-        <span className={`h-px w-6 ${mine ? "bg-ivory/40" : "bg-ink/25"}`} />
+        <FloralTwig className={mine ? "text-ivory/60" : "text-taupe"} />
         <span
           className={`text-[11px] uppercase tracking-[0.22em] ${
             mine ? "text-ivory/70" : "text-stone"
@@ -70,7 +71,7 @@ function WishCard({
 }
 
 export default function Wishes() {
-  const guest = useGuest();
+  const { guest, status } = useGuest();
   const { value, save, loaded } = useLocalStorage<MyWish | null>(
     `wish:${guest.slug}`,
     null,
@@ -110,6 +111,10 @@ export default function Wishes() {
   const handleSubmit = async () => {
     const m = message.trim();
     if (m.length < 3 || !name.trim() || sending) return;
+    if (guest.slug === "default") {
+      setError("Please open your personal invitation link to leave a wish.");
+      return;
+    }
     setSending(true);
     setError("");
     try {
@@ -150,11 +155,11 @@ export default function Wishes() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="h-px w-7 bg-ink/30" />
+            <FloralSprig className="text-taupe" />
             <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
               Words of Love
             </span>
-            <span className="h-px w-7 bg-ink/30" />
+            <FloralSprig flip className="text-taupe" />
           </motion.div>
           <MaskText
             as="h2"
@@ -178,8 +183,36 @@ export default function Wishes() {
           <div>
             <div className="border border-line bg-ivory p-8 sm:p-10 lg:sticky lg:top-24">
               <AnimatePresence mode="wait">
-                {!loaded || loadingWishes ? (
+                {status === "loading" || !loaded || loadingWishes ? (
                   <motion.div key="l" className="h-64" />
+                ) : guest.slug === "default" ? (
+                  <motion.div
+                    key="locked"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease }}
+                  >
+                    <motion.span
+                      className="font-serif text-3xl text-taupe"
+                      initial={{ scale: 0, rotate: -40 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ duration: 0.8, ease, delay: 0.15 }}
+                    >
+                      ✦
+                    </motion.span>
+                    <h3 className="mt-4 font-serif text-3xl font-light text-ink sm:text-4xl">
+                      A Blessing for the Couple
+                    </h3>
+                    <FloralBud className="mt-4 block text-taupe/80" />
+                    <p className="mt-5 text-sm leading-relaxed text-stone">
+                      Leaving a wish is reserved for invited guests. Please open
+                      the personal invitation link we sent you to share your
+                      blessing — and do enjoy reading the messages below.
+                    </p>
+                    <p className="mt-6 text-[10px] uppercase tracking-[0.28em] text-stone/70">
+                      One blessing per invitation
+                    </p>
+                  </motion.div>
                 ) : (value || alreadyWished) && !editing ? (
                   <motion.div
                     key="d"
@@ -198,7 +231,7 @@ export default function Wishes() {
                     <h3 className="mt-4 font-serif text-3xl font-light text-ink sm:text-4xl">
                       Thank You, {guest.name}
                     </h3>
-                    <span className="mt-4 block h-px w-12 bg-ink/25" />
+                    <FloralBud className="mt-4 block text-taupe/80" />
                     <p className="mt-5 text-sm leading-relaxed text-stone">
                       Your blessing has been added to our wall of love — you
                       will find it among the wishes. It means more to us than

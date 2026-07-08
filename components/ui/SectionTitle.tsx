@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { FloralSprig } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -16,7 +17,7 @@ export default function SectionTitle({
   tone?: "light" | "dark";
 }) {
   const isDark = tone === "dark";
-  const line = isDark ? "bg-ivory/40" : "bg-ink/30";
+  const floral = isDark ? "text-ivory/60" : "text-taupe";
 
   return (
     <div
@@ -33,7 +34,7 @@ export default function SectionTitle({
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
       >
-        <span className={`h-px w-7 ${line}`} />
+        <FloralSprig className={floral} />
         <span
           className={`text-[11px] uppercase tracking-[0.4em] ${
             isDark ? "text-ivory/70" : "text-stone"
@@ -41,7 +42,7 @@ export default function SectionTitle({
         >
           {eyebrow}
         </span>
-        {align === "center" && <span className={`h-px w-7 ${line}`} />}
+        {align === "center" && <FloralSprig flip className={floral} />}
       </motion.div>
 
       <motion.h2
