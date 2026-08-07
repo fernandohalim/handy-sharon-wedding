@@ -60,7 +60,7 @@ function WishCard({
         <FloralTwig className={mine ? "text-ivory/60" : "text-taupe"} />
         <span
           className={`text-[11px] uppercase tracking-[0.22em] ${
-            mine ? "text-ivory/70" : "text-stone"
+            mine ? "text-ivory/85" : "text-stone"
           }`}
         >
           {wish.name}
@@ -144,10 +144,10 @@ export default function Wishes() {
   }));
 
   return (
-    <section className="relative overflow-hidden bg-paper px-6 py-24 sm:px-10 sm:py-32">
+    <section className="relative overflow-hidden bg-transparent px-6 py-24 sm:px-10 sm:py-32">
       <div className="mx-auto max-w-6xl">
         {/* header */}
-        <div className="flex flex-col items-center text-center">
+        <div className="on-film flex flex-col items-center text-center">
           <motion.div
             className="flex items-center gap-3"
             initial={{ opacity: 0 }}
@@ -156,7 +156,7 @@ export default function Wishes() {
             transition={{ duration: 0.8 }}
           >
             <FloralSprig className="text-taupe" />
-            <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
+            <span className="text-[11px] uppercase tracking-[0.4em] text-ivory/85">
               Words of Love
             </span>
             <FloralSprig flip className="text-taupe" />
@@ -164,10 +164,10 @@ export default function Wishes() {
           <MaskText
             as="h2"
             text="Wishes & Prayers"
-            className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ink sm:text-6xl"
+            className="mt-5 font-serif text-4xl font-light leading-[1.05] text-ivory sm:text-6xl"
           />
           <motion.p
-            className="mt-6 max-w-md text-sm leading-relaxed text-stone"
+            className="mt-6 max-w-md text-sm leading-relaxed text-ivory/85"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -323,11 +323,11 @@ export default function Wishes() {
           {/* wishes wall */}
           <div>
             {loadingWishes ? (
-              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-stone/70">
+              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-ivory/75">
                 Gathering wishes…
               </p>
             ) : list.length === 0 ? (
-              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-stone/70">
+              <p className="py-10 text-center text-[10px] uppercase tracking-[0.3em] text-ivory/75">
                 No wishes yet — be the first to leave one.
               </p>
             ) : (
@@ -343,11 +343,14 @@ export default function Wishes() {
 
                 {visible < list.length ? (
                   <div className="mt-8 flex flex-col items-center gap-4">
-                    <p className="text-[10px] uppercase tracking-[0.28em] text-stone/70">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-ivory/75">
                       Showing {Math.min(visible, list.length)} of {list.length}{" "}
                       wishes
                     </p>
-                    <Button onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+                    <Button
+                      onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                      tone="dark"
+                    >
                       Show More Wishes
                       <svg
                         width="13"
@@ -363,7 +366,7 @@ export default function Wishes() {
                   </div>
                 ) : (
                   list.length > PAGE_SIZE && (
-                    <p className="mt-7 text-center text-[10px] uppercase tracking-[0.3em] text-stone/60">
+                    <p className="mt-7 text-center text-[10px] uppercase tracking-[0.3em] text-ivory/75">
                       ✦ {list.length} wishes in total ✦
                     </p>
                   )

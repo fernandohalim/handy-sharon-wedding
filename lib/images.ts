@@ -16,6 +16,7 @@ export const images = USE_PLACEHOLDERS
       hero: pic("hs-hero-21", 1700, 1100),
       bride: pic("hs-bride-12", 900, 1200),
       groom: pic("hs-groom-04", 900, 1200),
+      couple: pic("hs-couple-19", 1000, 1250),
       story: [
         pic("hs-story-31", 1000, 1250),
         pic("hs-story-58", 1000, 1250),
@@ -39,6 +40,7 @@ export const images = USE_PLACEHOLDERS
       hero: local("hero.webp"),
       bride: local("bride.webp"),
       groom: local("groom.webp"),
+      couple: local("story-1.webp"),
       story: [
         local("story-1.webp"),
         local("story-2.webp"),

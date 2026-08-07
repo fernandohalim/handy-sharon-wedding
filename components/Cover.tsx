@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { wedding } from "@/lib/config";
-import { coverVideo } from "@/lib/images";
+import { images } from "@/lib/images";
 import type { Guest } from "@/lib/guests";
 import InviteButton from "@/components/ui/InviteButton";
 import {
@@ -53,17 +53,12 @@ export default function Cover({
       exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
       transition={{ duration: 1.1, ease }}
     >
-      {/* ---- Background film ---- */}
+      {/* ---- Background photo ---- */}
       <div className="absolute inset-0">
-        <video
+        <img
           className="h-full w-full object-cover soft-tone"
-          src={coverVideo.src}
-          poster={coverVideo.poster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
+          src={images.cover}
+          alt="Handy and Sharon"
         />
         <div className="absolute inset-0 bg-ink/45" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/75 via-ink/15 to-ink/90" />
@@ -142,43 +137,20 @@ export default function Cover({
           </h1>
 
           <motion.div
-            className="mt-7 flex items-center gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.3 }}
-          >
-            <motion.span
-              className="h-px bg-ivory/45"
-              initial={{ width: 0 }}
-              animate={{ width: 36 }}
-              transition={{ duration: 0.9, ease, delay: 1.35 }}
-            />
-            <span className="text-[11px] uppercase tracking-[0.34em] text-ivory/85">
-              {wedding.dateShort}
-            </span>
-            <motion.span
-              className="h-px bg-ivory/45"
-              initial={{ width: 0 }}
-              animate={{ width: 36 }}
-              transition={{ duration: 0.9, ease, delay: 1.35 }}
-            />
-          </motion.div>
-
-          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, ease, delay: 1.45 }}
+            transition={{ duration: 1.1, ease, delay: 1.4 }}
           >
-            <FloralSpray className="mx-auto mt-5 text-ivory/65" />
+            <FloralSpray className="mx-auto mt-7 text-ivory/65" />
           </motion.div>
 
           <motion.p
-            className="mt-2 text-[10px] uppercase tracking-[0.4em] text-ivory/55"
+            className="mt-4 font-serif text-lg italic tracking-[0.12em] text-ivory/80 sm:text-xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.5 }}
           >
-            {wedding.venue.area}
+            {wedding.hashtag}
           </motion.p>
         </div>
 

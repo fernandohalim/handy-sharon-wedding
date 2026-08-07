@@ -10,10 +10,12 @@ export default function Footer() {
   const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative overflow-hidden bg-paper px-6 py-24 text-ink sm:py-32">
-      <div className="pointer-events-none absolute inset-4 border border-line sm:inset-6" />
+    <footer className="relative overflow-hidden bg-transparent px-6 py-24 text-ivory sm:py-32">
+      <div className="pointer-events-none absolute inset-4 border border-ivory/15 sm:inset-6" />
 
-      <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+      {/* Frosted panel — same reasoning as the countdown band: all light type,
+          no opaque card of its own. */}
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center border border-ivory/15 bg-ink/65 px-6 py-16 text-center shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:px-12 sm:py-20">
         {/* monogram */}
         <motion.img
           src="/images/logo.webp"
@@ -39,7 +41,7 @@ export default function Footer() {
         </div>
 
         <motion.p
-          className="mt-7 text-[11px] uppercase tracking-[0.42em] text-stone"
+          className="mt-7 text-[11px] uppercase tracking-[0.42em] text-ivory/85"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -60,7 +62,7 @@ export default function Footer() {
         </motion.h2>
 
         <motion.p
-          className="mt-7 max-w-md text-sm leading-relaxed text-stone"
+          className="mt-7 max-w-md text-sm leading-relaxed text-ivory/85"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -74,10 +76,10 @@ export default function Footer() {
         <div className="mt-9 flex items-center gap-4">
           <FloralTwig className="text-taupe" />
           <div className="text-center">
-            <p className="text-[11px] uppercase tracking-[0.34em] text-ink">
+            <p className="text-[11px] uppercase tracking-[0.34em] text-ivory">
               {wedding.dateShort}
             </p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-stone">
+            <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-ivory/85">
               {wedding.venue.area}
             </p>
           </div>
@@ -86,32 +88,8 @@ export default function Footer() {
 
         {/* hashtag */}
         <p className="mt-9 font-serif text-2xl italic text-taupe">
-          #HandyAndSharon
+          {wedding.hashtag}
         </p>
-
-        {/* socials */}
-        <div className="mt-6 flex items-center gap-8">
-          {[
-            { label: wedding.groom.name, handle: wedding.groom.instagram },
-            { label: wedding.bride.name, handle: wedding.bride.instagram },
-          ].map((s) => (
-            <a
-              key={s.handle}
-              href={`https://instagram.com/${s.handle}`}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col items-center gap-1"
-            >
-              <span className="text-[9px] uppercase tracking-[0.3em] text-stone">
-                {s.label}
-              </span>
-              <span className="relative text-[11px] uppercase tracking-[0.2em] text-ink">
-                @{s.handle}
-                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink/50 transition-transform duration-500 ease-editorial group-hover:scale-x-100" />
-              </span>
-            </a>
-          ))}
-        </div>
 
         {/* back to top */}
         <button
@@ -120,7 +98,7 @@ export default function Footer() {
           aria-label="Back to top"
         >
           <motion.span
-            className="text-stone"
+            className="text-ivory/85"
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -135,7 +113,7 @@ export default function Footer() {
               <path d="M12 20V4M5 11l7-7 7 7" />
             </svg>
           </motion.span>
-          <span className="text-[9px] uppercase tracking-[0.32em] text-stone transition-colors duration-300 group-hover:text-ink">
+          <span className="text-[9px] uppercase tracking-[0.32em] text-ivory/85 transition-colors duration-300 group-hover:text-ivory">
             Back to Top
           </span>
         </button>
@@ -143,10 +121,10 @@ export default function Footer() {
         {/* credit */}
         <div className="mt-12 flex w-full flex-col items-center gap-3">
           <FloralDivider className="text-taupe/60" />
-          <p className="text-[10px] uppercase tracking-[0.3em] text-stone">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-ivory/85">
             An Invitation Crafted with Love
           </p>
-          <p className="text-[10px] uppercase tracking-[0.26em] text-stone/70">
+          <p className="text-[10px] uppercase tracking-[0.26em] text-ivory/75">
             © {wedding.year} · {wedding.groom.name} &amp; {wedding.bride.name}
           </p>
         </div>

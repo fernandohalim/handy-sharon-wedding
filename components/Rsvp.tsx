@@ -93,10 +93,13 @@ export default function Rsvp() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-ivory px-6 py-24 sm:px-10 sm:py-32">
+    <section
+      id="rsvp"
+      className="relative overflow-hidden bg-transparent px-6 py-24 scroll-mt-8 sm:px-10 sm:py-32"
+    >
       <div className="mx-auto max-w-5xl">
         {/* header */}
-        <div className="flex flex-col items-center text-center">
+        <div className="on-film flex flex-col items-center text-center">
           <motion.div
             className="flex items-center gap-3"
             initial={{ opacity: 0 }}
@@ -105,7 +108,7 @@ export default function Rsvp() {
             transition={{ duration: 0.8 }}
           >
             <FloralSprig className="text-taupe" />
-            <span className="text-[11px] uppercase tracking-[0.4em] text-stone">
+            <span className="text-[11px] uppercase tracking-[0.4em] text-ivory/85">
               Kindly Respond
             </span>
             <FloralSprig flip className="text-taupe" />
@@ -113,7 +116,7 @@ export default function Rsvp() {
           <MaskText
             as="h2"
             text="Will You Celebrate With Us"
-            className="mt-5 font-serif text-4xl font-light leading-[1.08] text-ink sm:text-6xl"
+            className="mt-5 font-serif text-4xl font-light leading-[1.08] text-ivory sm:text-6xl"
           />
         </div>
 
@@ -237,6 +240,12 @@ export default function Rsvp() {
                     <p className="mt-4 text-sm leading-relaxed text-stone">
                       We would be honored by your presence. Kindly let us know
                       if you&apos;ll be joining the celebration.
+                    </p>
+
+                    <p className="mt-4 border-l-2 border-taupe/40 pl-4 text-[13px] italic leading-relaxed text-stone">
+                      Planning to bring more than your reserved seats? Please
+                      reach out to us beforehand so we can warmly welcome your
+                      loved ones.
                     </p>
 
                     {/* attendance */}

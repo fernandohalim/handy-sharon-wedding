@@ -37,7 +37,7 @@ export default function SectionTitle({
         <FloralSprig className={floral} />
         <span
           className={`text-[11px] uppercase tracking-[0.4em] ${
-            isDark ? "text-ivory/70" : "text-stone"
+            isDark ? "text-ivory/85" : "text-stone"
           }`}
         >
           {eyebrow}

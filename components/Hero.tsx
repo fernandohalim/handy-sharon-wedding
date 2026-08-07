@@ -83,8 +83,21 @@ export default function Hero() {
       ref={sectionRef}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="relative min-h-[100svh] overflow-hidden bg-ivory"
+      className="relative min-h-[100svh] overflow-hidden bg-transparent"
     >
+      {/* Steadies the bottom edge, which carries the verse and the scroll cue
+          over the busiest part of the frame. Deliberately gentle — a heavier
+          wash here reads as a grey slab over the film. The type itself relies
+          on `on-film` below. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(15,20,33,0.55) 0%, rgba(15,20,33,0.12) 32%, rgba(15,20,33,0) 50%)",
+        }}
+      />
+
       {/* floating dust */}
       <motion.div
         className="pointer-events-none absolute inset-0 z-20"
@@ -116,21 +129,21 @@ export default function Hero() {
       />
 
       {/* frame */}
-      <div className="pointer-events-none absolute inset-3 z-30 border border-ink/12 sm:inset-5" />
+      <div className="pointer-events-none absolute inset-3 z-30 border border-ivory/15 sm:inset-5" />
 
       {/* vertical edge labels */}
       <div className="absolute left-6 top-1/2 z-30 hidden -translate-y-1/2 lg:block">
-        <span className="block -rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.5em] text-stone">
+        <span className="block -rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.5em] text-ivory/85">
           Handy &amp; Sharon
         </span>
       </div>
       <div className="absolute right-6 top-1/2 z-30 hidden -translate-y-1/2 lg:block">
-        <span className="block rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.5em] text-stone">
+        <span className="block rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.5em] text-ivory/85">
           Est. MMXXVI
         </span>
       </div>
 
-      <div className="relative z-10 mx-auto grid max-w-[88rem] grid-cols-1 lg:min-h-[100svh] lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto]">
+      <div className="on-film relative z-10 mx-auto grid max-w-[88rem] grid-cols-1 lg:min-h-[100svh] lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto]">
         {/* METADATA */}
         <motion.div
           className="flex items-center justify-between px-7 pb-2 pt-24 sm:px-12 lg:col-span-7 lg:row-start-1 lg:pb-0 lg:pl-20 lg:pr-12 lg:pt-28"
@@ -138,7 +151,10 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.7 }}
         >
-          <span className="eyebrow">The Wedding Of</span>
+          <span className="eyebrow text-ivory/85">The Wedding Of</span>
+          <span className="font-serif text-lg italic text-taupe sm:text-xl">
+            {wedding.hashtag}
+          </span>
         </motion.div>
 
         {/* NAMES */}
@@ -151,8 +167,10 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.6, delay: 1.2 }}
           >
+            {/* text-shadow:none — the glyph is transparent with only a stroke,
+                so an inherited shadow would render as a dark blob behind it */}
             <motion.span
-              className="block font-serif text-[46vw] italic leading-none text-transparent [-webkit-text-stroke:1px_rgba(28,26,23,0.10)] lg:text-[26rem]"
+              className="block font-serif text-[46vw] italic leading-none text-transparent [-webkit-text-stroke:1px_rgba(238,242,251,0.16)] [text-shadow:none] lg:text-[26rem]"
               animate={{ scale: [1, 1.045, 1], rotate: [0, 2.2, 0] }}
               transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             >
@@ -162,7 +180,7 @@ export default function Hero() {
 
           <motion.div style={{ x: nameX, y: nameY }} className="w-full">
             <motion.p
-              className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.38em] text-stone"
+              className="mb-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.38em] text-ivory/85"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.9 }}
@@ -177,7 +195,7 @@ export default function Hero() {
               We Are Getting Married
             </motion.p>
 
-            <h1 className="relative font-serif font-light leading-[0.84] text-ink">
+            <h1 className="relative font-serif font-light leading-[0.84] text-ivory">
               <RiseWord delay={1} className="text-[clamp(3.4rem,15vw,10rem)]">
                 {wedding.groom.name}
               </RiseWord>
@@ -267,7 +285,7 @@ export default function Hero() {
           {/* secondary image — desktop only */}
           <motion.div
             style={{ x: secX, y: secY }}
-            className="hidden shrink-0 border border-ink/15 p-1.5 lg:block"
+            className="hidden shrink-0 border border-ivory/20 p-1.5 lg:block"
           >
             <div className="relative h-44 w-36 overflow-hidden">
               <motion.img
@@ -282,30 +300,31 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* verse */}
+          {/* intro line */}
           <div className="flex-1">
             <motion.span
-              className="block h-px bg-ink/30"
+              className="block h-px bg-ivory/30"
               initial={{ width: 0 }}
               animate={{ width: 48 }}
               transition={{ duration: 1, ease, delay: 1.8 }}
             />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-stone">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/85">
               Two hearts, one promise. We invite you to witness the beginning of
               our forever.
             </p>
           </div>
 
-          {/* date */}
-          <div className="border-t border-ink/15 pt-5 lg:border-t-0 lg:pt-0 lg:text-right">
-            <p className="text-[10px] uppercase tracking-[0.34em] text-stone">
-              Save the Date
+          {/* scripture verse */}
+          <div className="border-t border-ivory/20 pt-5 lg:max-w-xs lg:border-t-0 lg:pt-0 lg:text-right">
+            <p className="text-[10px] uppercase tracking-[0.34em] text-ivory/85">
+              A Blessing
             </p>
-            <p className="mt-2 font-serif text-3xl text-ink sm:text-[2.6rem]">
-              {wedding.dateShort}
+            <p className="mt-3 font-serif text-xl italic leading-snug text-ivory sm:text-2xl">
+              &ldquo;Above all, love each other deeply, for love covers over a
+              multitude of sins.&rdquo;
             </p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-stone">
-              {wedding.venue.area}
+            <p className="mt-2 text-[10px] uppercase tracking-[0.32em] text-ivory/85">
+              1 Peter 4:8
             </p>
           </div>
         </motion.div>

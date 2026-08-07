@@ -2,7 +2,6 @@
 
 import { motion } from "motion/react";
 import { wedding } from "@/lib/config";
-import { images } from "@/lib/images";
 import Countdown from "@/components/Countdown";
 import { FloralDivider } from "@/components/ui/Floral";
 
@@ -10,14 +9,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function CountdownBand() {
   return (
-    <section className="relative overflow-hidden bg-ivory px-6 py-28 text-center text-ink sm:py-36">
-      <img
-        src={images.gallery[0]}
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover opacity-30 soft-tone"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-ivory/85 via-ivory/55 to-ivory/90" />
+    <section className="relative overflow-hidden bg-transparent px-6 py-28 text-center text-ivory sm:py-36">
       {/* texture — fine diagonal hatch */}
       <div
         className="absolute inset-0"
@@ -43,11 +35,14 @@ export default function CountdownBand() {
             "radial-gradient(58% 48% at 50% 44%, rgba(201,120,154,0.18), transparent 72%)",
         }}
       />
-      <div className="pointer-events-none absolute inset-5 border border-ink/12 sm:inset-8" />
+      <div className="pointer-events-none absolute inset-5 border border-ivory/12 sm:inset-8" />
 
-      <div className="relative mx-auto flex max-w-2xl flex-col items-center">
+      {/* Frosted panel — this whole section is light type with no card of its
+          own, and the countdown digits need to stay crisp, so it gets a real
+          surface rather than relying on the veil alone. */}
+      <div className="relative mx-auto flex max-w-2xl flex-col items-center border border-ivory/15 bg-ink/65 px-6 py-14 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:px-12 sm:py-16">
         <motion.p
-          className="eyebrow text-stone"
+          className="eyebrow text-ivory/85"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -70,11 +65,11 @@ export default function CountdownBand() {
         <FloralDivider className="mt-8 text-taupe/80" />
 
         <div className="mt-12">
-          <Countdown tone="light" />
+          <Countdown tone="dark" />
         </div>
 
         <motion.p
-          className="mt-12 text-[11px] uppercase tracking-[0.34em] text-stone"
+          className="mt-12 text-[11px] uppercase tracking-[0.34em] text-ivory/85"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
