@@ -20,6 +20,10 @@ export default function Footer() {
         <motion.img
           src="/images/logo.webp"
           alt={`${wedding.groom.name} & ${wedding.bride.name} monogram`}
+          width={513}
+          height={640}
+          loading="lazy"
+          decoding="async"
           className="mb-8 h-20 w-auto opacity-90 sm:h-24"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 0.9, y: 0 }}

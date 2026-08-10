@@ -23,7 +23,7 @@ export default function InviteButton({ onClick }: { onClick: () => void }) {
       transition={{ duration: 1.1, ease, delay: 1.75 }}
       whileHover="hover"
       whileTap={{ scale: 0.97 }}
-      className="group relative flex flex-col items-center gap-5"
+      className="group relative flex flex-col items-center gap-3.5 sm:gap-5"
     >
       {/* breathing rose glow */}
       <motion.span

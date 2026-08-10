@@ -49,13 +49,6 @@ type Dialog = {
   onConfirm?: () => void | Promise<void>;
 };
 
-function normalizeSlug(input: string): string {
-  return input
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 function formatDateTime(ms: number | null): string {
   if (!ms) return "";
   return new Date(ms).toLocaleString(undefined, {
@@ -92,8 +85,11 @@ export default function Admin({
   const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
-  const [newSlug, setNewSlug] = useState("");
   const [newName, setNewName] = useState("");
+  /** Slug the server minted for the guest just added — see `addGuest`. */
+  const [addedSlug, setAddedSlug] = useState<{ slug: string; name: string } | null>(
+    null,
+  );
   const [newPax, setNewPax] = useState(2);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
@@ -140,9 +136,7 @@ export default function Admin({
   const totalPending = Math.max(0, guests.length - responses.length);
   const totalPax = guests.reduce((sum, g) => sum + (g.pax || 0), 0);
 
-  const slugPreview = normalizeSlug(newSlug);
-  const canAdd =
-    !!slugPreview && !!newName.trim() && newPax >= 1 && newPax <= 10 && !adding;
+  const canAdd = !!newName.trim() && newPax >= 1 && newPax <= 10 && !adding;
 
   const GUESTS_PER_PAGE = 25;
   const WISHES_PER_PAGE = 6;
@@ -239,25 +233,27 @@ export default function Admin({
     if (!canAdd) return;
     setAdding(true);
     setAddError("");
+    setAddedSlug(null);
     try {
+      const name = newName.trim();
       const res = await fetch(
         `/api/admin/guests?secret=${encodeURIComponent(secret)}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            slug: slugPreview,
-            name: newName.trim(),
-            pax: newPax,
-          }),
+          // No slug — the server mints a random one, so that it cannot be
+          // guessed from the guest's name.
+          body: JSON.stringify({ name, pax: newPax }),
         },
       );
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         setAddError(data.error ?? "Couldn't add guest.");
         return;
       }
-      setNewSlug("");
+      // Surfaced right here because it is the one moment the link is easy to
+      // find — the new row lands somewhere in 60-odd sorted, paginated guests.
+      setAddedSlug({ slug: data.slug, name });
       setNewName("");
       setNewPax(2);
       router.refresh();
@@ -503,14 +499,15 @@ export default function Admin({
               >
                 <div className="mb-5 border border-line bg-paper p-5 sm:p-6">
                   <p className="text-xs text-stone">
-                    The slug becomes the value after{" "}
-                    <code className="bg-ivory px-1">?to=</code> in the invite
-                    URL.
+                    The invite link is generated automatically — a random{" "}
+                    <code className="bg-ivory px-1">?to=</code> code that
+                    can&apos;t be guessed from the guest&apos;s name. It is shown
+                    once the guest is added, and can&apos;t be chosen or changed.
                   </p>
 
                   <form
                     onSubmit={addGuest}
-                    className="mt-4 grid gap-4 sm:grid-cols-[1.4fr_1fr_auto_auto] sm:items-end"
+                    className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto_auto] sm:items-end"
                   >
                     <label className="flex flex-col gap-1.5">
                       <span className="text-[10px] uppercase tracking-[0.25em] text-stone">
@@ -523,21 +520,6 @@ export default function Admin({
                         }
                         placeholder="Enter Guest Name"
                         className="border border-line bg-ivory px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink/60"
-                      />
-                    </label>
-
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-stone">
-                        Slug{" "}
-                        {slugPreview && newSlug !== slugPreview && (
-                          <span className="text-taupe">→ {slugPreview}</span>
-                        )}
-                      </span>
-                      <input
-                        value={newSlug}
-                        onChange={(e) => setNewSlug(e.target.value)}
-                        placeholder="guest-name"
-                        className="border border-line bg-ivory px-3 py-2.5 font-mono text-sm text-ink outline-none transition-colors focus:border-ink/60"
                       />
                     </label>
 
@@ -566,6 +548,32 @@ export default function Admin({
 
                   {addError && (
                     <p className="mt-3 text-xs text-taupe">{addError}</p>
+                  )}
+
+                  {addedSlug && (
+                    <div className="mt-4 flex flex-wrap items-center gap-3 border border-line bg-ivory px-4 py-3">
+                      <span className="text-xs text-stone">
+                        Added <strong className="text-ink">{addedSlug.name}</strong>{" "}
+                        —
+                      </span>
+                      <code className="bg-paper px-1.5 py-0.5 font-mono text-xs text-ink">
+                        ?to={addedSlug.slug}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          copy(
+                            `${window.location.origin}/?to=${addedSlug.slug}`,
+                            `link-${addedSlug.slug}`,
+                          )
+                        }
+                        className="border border-line px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-stone transition-colors hover:border-ink/60 hover:text-ink"
+                      >
+                        {copiedKey === `link-${addedSlug.slug}`
+                          ? "Copied"
+                          : "Copy link"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </motion.div>

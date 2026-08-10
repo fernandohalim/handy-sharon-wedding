@@ -3,10 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { images } from "@/lib/images";
+import { wedding } from "@/lib/config";
 import MaskText from "@/components/ui/MaskText";
 import { FloralSprig } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+/** Alt text carries the names as well as the caption, so the photographs are
+ *  findable in image search instead of being sixteen anonymous "First Light"s. */
+const altFor = (caption: string) =>
+  `${caption} — ${wedding.groom.name} and ${wedding.bride.name} prewedding photograph`;
 
 const CAPTIONS = [
   "First Light",
@@ -75,8 +81,9 @@ function GalleryItem({
         <div className={`${aspect} w-full overflow-hidden`}>
           <img
             src={src}
-            alt={caption}
+            alt={altFor(caption)}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover soft-tone transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
           />
         </div>
@@ -215,7 +222,7 @@ function Lightbox({
         <div className="border border-ivory/25 p-2">
           <img
             src={images.gallery[index]}
-            alt={CAPTIONS[index % CAPTIONS.length]}
+            alt={altFor(CAPTIONS[index % CAPTIONS.length])}
             className="max-h-[76vh] w-auto object-contain"
           />
         </div>

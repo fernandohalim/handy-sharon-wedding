@@ -215,6 +215,13 @@ export default function Hero() {
                   {wedding.bride.name}
                 </RiseWord>
               </span>
+              {/* The design wants two words; a search result and a screen
+                  reader want the whole sentence. This gives both. */}
+              <span className="sr-only">
+                {" "}
+                — Wedding, {wedding.dateLong}, at {wedding.venue.name},{" "}
+                {wedding.venue.area}
+              </span>
             </h1>
           </motion.div>
         </div>
@@ -243,7 +250,10 @@ export default function Hero() {
                 >
                   <img
                     src={images.hero}
-                    alt="Handy and Sharon"
+                    alt={`${wedding.groom.fullName} and ${wedding.bride.fullName} photographed in Sydney`}
+                    width={1282}
+                    height={1920}
+                    decoding="async"
                     className="h-full w-full object-cover soft-tone"
                   />
                 </motion.div>
@@ -290,7 +300,7 @@ export default function Hero() {
             <div className="relative h-44 w-36 overflow-hidden">
               <motion.img
                 src={images.gallery[2]}
-                alt=""
+                alt={`${wedding.groom.name} and ${wedding.bride.name} — prewedding portrait`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover soft-tone"
                 initial={{ scale: 1.3, opacity: 0 }}

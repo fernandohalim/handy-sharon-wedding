@@ -27,6 +27,11 @@
 # raw source assets (huge originals — processed versions live in /public)
 /prewed_photos
 
+# old → new invite slug mapping from scripts/reslug-guests.mjs.
+# Pairs every guest's name with their live private invite link — the one thing
+# on this machine that must not end up in a public repo.
+/reslug-map.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*

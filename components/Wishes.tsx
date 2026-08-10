@@ -70,7 +70,12 @@ function WishCard({
   );
 }
 
-export default function Wishes() {
+/**
+ * `active` is false while the cover is still closed. The section renders either
+ * way — crawlers need the markup — but the guestbook read is deferred until the
+ * invitation is actually open, so a visitor who never taps costs nothing.
+ */
+export default function Wishes({ active = true }: { active?: boolean }) {
   const { guest, status } = useGuest();
   const { value, save, loaded } = useLocalStorage<MyWish | null>(
     `wish:${guest.slug}`,
@@ -89,13 +94,14 @@ export default function Wishes() {
   // keep the name field in sync once the guest resolves from Firestore
   useEffect(() => setName(guest.name), [guest.name]);
 
-  // load the public guestbook from Firestore on mount
+  // load the public guestbook from Firestore once the invitation is opened
   useEffect(() => {
+    if (!active) return;
     fetchWishes()
       .then(setWishes)
       .catch(() => {})
       .finally(() => setLoadingWishes(false));
-  }, []);
+  }, [active]);
 
   const myWish = wishes.find((w) => w.id === guest.slug);
 

@@ -126,8 +126,10 @@ export default function Rsvp() {
             {/* image side */}
             <div className="relative h-56 lg:h-auto">
               <img
-                src={images.gallery[5]}
-                alt=""
+                src={images.rsvp}
+                alt={`${wedding.groom.fullName} and ${wedding.bride.fullName} — prewedding portrait`}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover soft-tone"
               />
               <div className="absolute inset-0 bg-ink/25" />

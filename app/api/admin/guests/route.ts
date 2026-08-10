@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { isValidSlug, newSlug } from "@/lib/slug";
 
 export const runtime = "nodejs";
 
@@ -10,25 +11,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { slug?: unknown; name?: unknown; pax?: unknown };
+  // Note there is no `slug` here. The invite link is only private while it is
+  // unpredictable, so the slug is minted on the server and a client-supplied
+  // one is ignored rather than honoured — otherwise anyone who could reach this
+  // endpoint could plant a guessable link.
+  let body: { name?: unknown; pax?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const slug = String(body.slug ?? "")
-    .trim()
-    .toLowerCase();
   const name = String(body.name ?? "").trim();
   const pax = Number(body.pax);
 
-  if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
-    return NextResponse.json(
-      { error: "Slug must be lowercase letters, digits, and hyphens." },
-      { status: 400 },
-    );
-  }
   if (!name) {
     return NextResponse.json({ error: "Name is required." }, { status: 400 });
   }
@@ -39,23 +35,33 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ref = adminDb.collection("guests").doc(slug);
-  const existing = await ref.get();
-  if (existing.exists) {
+  // A collision is vanishingly unlikely at this scale, but a duplicate would
+  // silently overwrite another guest's invitation, so draw again if it happens.
+  let slug = "";
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const candidate = newSlug();
+    if (!(await adminDb.collection("guests").doc(candidate).get()).exists) {
+      slug = candidate;
+      break;
+    }
+  }
+  if (!slug) {
     return NextResponse.json(
-      { error: `Slug "${slug}" already exists.` },
-      { status: 409 },
+      { error: "Could not allocate an invite link. Please try again." },
+      { status: 503 },
     );
   }
 
-  await ref.set({
+  await adminDb.collection("guests").doc(slug).set({
     slug,
     name,
     pax,
     createdAt: FieldValue.serverTimestamp(),
   });
 
-  return NextResponse.json({ ok: true });
+  // Returned because the admin screen has no other way to learn it — unlike the
+  // old scheme, the caller cannot predict what it asked for.
+  return NextResponse.json({ ok: true, slug });
 }
 
 export async function PATCH(req: NextRequest) {
@@ -79,7 +85,7 @@ export async function PATCH(req: NextRequest) {
 
   // The slug is the invite URL — it identifies the doc and is never rewritten
   // here, so links already sent out keep working.
-  if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+  if (!isValidSlug(slug)) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
   if (!name) {
@@ -113,7 +119,7 @@ export async function DELETE(req: NextRequest) {
   }
 
   const slug = req.nextUrl.searchParams.get("slug")?.trim().toLowerCase() ?? "";
-  if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+  if (!isValidSlug(slug)) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 

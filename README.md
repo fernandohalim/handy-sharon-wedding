@@ -22,6 +22,7 @@
 * **WhatsApp Share Generator:** the admin builds a personal invite message per guest — copy, share, sent. opens whatsapp directly in one tap.
 * **Private Admin Dashboard:** visit `/manage/<secret>` to search, sort, paginate, see who's pending, and delete with a styled confirmation modal. no login form — just an unguessable url.
 * **Lightweight by Default:** next.js server components handle the heavy lifting; the firebase free tier handles everything else. deploys cleanly on Vercel.
+* **Search & Share Ready:** the full invitation is in the markup before anyone taps the cover, so crawlers see the date, venue and schedule — plus schema.org `Event` data, a canonical url, `robots.txt`, `sitemap.xml`, and a hand-composed 1200×630 share card for whatsapp and imessage.
 
 ## Tech Stack
 
@@ -58,6 +59,7 @@ npm install
 # FIREBASE_CLIENT_EMAIL=...
 # FIREBASE_PRIVATE_KEY="..."
 # ADMIN_SECRET=...
+# NEXT_PUBLIC_SITE_URL=https://handpickedforshar.com
 
 # start the local development server
 npm run dev
@@ -70,6 +72,18 @@ Then open:
 * `/manage/<ADMIN_SECRET>` — the admin dashboard
 
 Full setup notes (Firestore rules, customising the couple's details, deploying to Vercel) live in the project docs.
+
+## Search Engines & Link Previews
+
+`NEXT_PUBLIC_SITE_URL` is the one setting that has to be right before you deploy. Every absolute url — the canonical link, the open graph tags, `sitemap.xml`, `robots.txt`, the json-ld — resolves from `lib/site.ts`, which reads that variable and falls back to `https://handpickedforshar.com`. **Set it in the Vercel project settings** (production and preview) so previews don't advertise the production domain.
+
+The share card at `app/opengraph-image.jpg` is generated, not hand-drawn. Regenerate it after changing the photography or any of the wedding details:
+
+```bash
+node scripts/make-og-image.mjs
+```
+
+Then paste the deployed url into [Facebook's sharing debugger](https://developers.facebook.com/tools/debug/) to flush the cached preview, and submit `sitemap.xml` in [Google Search Console](https://search.google.com/search-console).
 
 ## License
 

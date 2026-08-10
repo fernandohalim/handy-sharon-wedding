@@ -17,10 +17,14 @@ export const images = USE_PLACEHOLDERS
       bride: pic("hs-bride-12", 900, 1200),
       groom: pic("hs-groom-04", 900, 1200),
       couple: pic("hs-couple-19", 1000, 1250),
+      rsvp: pic("hs-rsvp-44", 1000, 1500),
       story: [
-        pic("hs-story-31", 1000, 1250),
-        pic("hs-story-58", 1000, 1250),
-        pic("hs-story-77", 1000, 1250),
+        pic("hs-story-31", 1500, 1000),
+        pic("hs-story-58", 1000, 1500),
+        pic("hs-story-77", 1500, 1000),
+        pic("hs-story-12", 1000, 1500),
+        pic("hs-story-64", 1500, 1000),
+        pic("hs-story-89", 1000, 1500),
       ],
       gallery: [
         pic("hs-g-01", 900, 1200),
@@ -40,11 +44,16 @@ export const images = USE_PLACEHOLDERS
       hero: local("hero.webp"),
       bride: local("bride.webp"),
       groom: local("groom.webp"),
-      couple: local("story-1.webp"),
+      couple: local("couple.webp"),
+      rsvp: local("rsvp.webp"),
+      /** "The Story of Us" marquee, in the order they scroll past. */
       story: [
         local("story-1.webp"),
         local("story-2.webp"),
         local("story-3.webp"),
+        local("story-4.webp"),
+        local("story-5.webp"),
+        local("story-6.webp"),
       ],
       gallery: [
         local("gallery-1.webp"),

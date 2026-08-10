@@ -1,10 +1,17 @@
 /**
- * One-off seed of the real guest list into Firestore.
+ * One-off seed of the real guest list into Firestore. ALREADY RUN — kept as the
+ * record of who was invited, not as something to run again.
  *
  *   node --env-file=.env.local scripts/seed-guests.mjs            # dry run
  *   node --env-file=.env.local scripts/seed-guests.mjs --commit   # write
  *
  * Behind a corp proxy, prefix with HTTPS_PROXY=http://gps:8080
+ *
+ * ⚠ The slugs below are the guests' names, which is exactly what made every
+ * invitation guessable from any other. They were replaced with random ones by
+ * scripts/reslug-guests.mjs, so re-running this would put the guessable links
+ * back and orphan the RSVPs filed under the current slugs. To add a guest now,
+ * use the manage screen — it mints a random slug server-side.
  */
 import https from "node:https";
 import { HttpsProxyAgent } from "https-proxy-agent";
