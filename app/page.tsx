@@ -55,7 +55,14 @@ export default function Page() {
           opened: the sections underneath need the dark ground to be readable
           from the start, and the footage is far too heavy to pull down for a
           visitor who is still looking at the cover. */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-black">
+      {/* `h-[100lvh]` on top of `inset-0`, and it is not redundant. iOS sizes a
+          fixed element to the *small* viewport — the one with the toolbar in
+          it. Scroll, the toolbar retracts, the visible page grows to the large
+          viewport, and the film stays the size it was: a black band across the
+          bottom of the screen where the footage has run out. `lvh` is that
+          larger height, so the film covers every toolbar state. Anchored at
+          top:0, so the overspill falls off the bottom where nothing reads it. */}
+      <div className="pointer-events-none fixed inset-0 -z-10 h-[100lvh] overflow-hidden bg-black">
         {opened && (
           <video
             className="h-full w-full object-cover"

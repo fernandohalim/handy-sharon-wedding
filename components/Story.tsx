@@ -12,6 +12,20 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const SPEED = 52;
 
 /**
+ * The strip's height, repeated on the band and on each frame.
+ *
+ * Both copies are deliberate — do not collapse the frames back to `h-full`.
+ * The track is sized `w-max`, and Safari does not resolve percentage heights
+ * while it computes `max-content`: given `h-full` it measures the photographs
+ * at their natural widths (~15000px of them) instead of the widths they
+ * actually lay out at (~3400px). The track then reports a width four times
+ * what is on screen, `-50%` overshoots by thousands of pixels, and the whole
+ * strip is dragged out of frame — a blank band, on iOS only. A height in rem
+ * is definite during intrinsic sizing, so every engine measures the same strip.
+ */
+const STRIP_H = "h-[15rem] sm:h-[21rem] lg:h-[26rem]";
+
+/**
  * A line per photograph, in the order they scroll past. The captions carry the
  * alt text as well as the visible label, so the strip is not six anonymous
  * images to a screen reader or to image search.
@@ -41,7 +55,7 @@ function Row({ hidden }: { hidden?: boolean }) {
       {images.story.map((src, i) => (
         <figure
           key={i}
-          className="relative mx-3 h-full shrink-0 border border-ivory/20 bg-ink/20 p-1.5 sm:mx-4 sm:p-2"
+          className={`relative mx-3 ${STRIP_H} shrink-0 border border-ivory/20 bg-ink/20 p-1.5 sm:mx-4 sm:p-2`}
         >
           {/* The photographs are a mix of upright and wide frames. Fixing the
               height and letting the width follow keeps every one uncropped and
@@ -108,7 +122,7 @@ export default function Story() {
       {/* The strip runs full-bleed, edge to edge, so it reads as film passing
           rather than as a row of pictures inside the page's column. */}
       <motion.div
-        className="mt-14 flex h-[15rem] sm:mt-16 sm:h-[21rem] lg:h-[26rem]"
+        className={`mt-14 flex ${STRIP_H} sm:mt-16`}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
