@@ -26,9 +26,15 @@ const OUT = path.join(root, "public", "images");
 const COMMIT = process.argv.includes("--commit");
 
 /**
- * `long` is the longest edge in the output; the other follows the original's
- * aspect ratio. Nothing is cropped — the cover and the story photos are framed
- * on the page as whole photographs, so a crop here would fight the layout.
+ * `long` is the longest edge in the output; the other follows the aspect ratio
+ * of whatever is being resized. Nothing is cropped by default — the cover and
+ * the story photos are framed on the page as whole photographs, so a crop here
+ * would fight the layout.
+ *
+ * `crop` is the one exception: `{ left, top, width, height }` in the
+ * original's own pixels, taken before the resize. Use it only where the page
+ * wants a tighter frame than the photograph — cropping at encode time keeps
+ * the output sharp, where a CSS `scale()` would just magnify a smaller file.
  */
 const SLOTS = [
   // Front invitation — the couple wanted this one held as a photograph, with
@@ -43,6 +49,29 @@ const SLOTS = [
   // Backdrop of the RSVP card.
   { out: "rsvp.webp", src: "DSC05233-2.jpeg", long: 1800, quality: 80 },
 
+  // "The Beloved Couple" portrait — the couple's pick, 2026-08-12.
+  //
+  // The original is a wide vista: the two of them stand small on the steps
+  // with a great deal of harbour around them, and at the size this section
+  // renders they were barely readable. This is ~70% of the frame's width,
+  // centred on them, at 3:4 upright.
+  //
+  // The vertical placement is set against what the section actually shows,
+  // not against the file: ImageReveal renders the photo at h-[140%] for its
+  // parallax, so only the middle ~71% is ever on screen. Framed to that
+  // window the couple sit in the lower third with the sun's trail on the
+  // water above them and a few steps below their feet — pushed any higher
+  // and the parallax clips their shoes at mid-scroll. The horizon itself is
+  // outside the window by design; it cannot be kept without either dropping
+  // the zoom back to nothing or crowding the couple against the bottom.
+  {
+    out: "couple.webp",
+    src: "DSC03579.jpeg",
+    crop: { left: 686, top: 1900, width: 3300, height: 4400 },
+    long: 1600,
+    quality: 82,
+  },
+
   // "The Story of Us" marquee — six, in the order they scroll past.
   { out: "story-1.webp", src: "DSC04251.JPG", long: 1500, quality: 82 },
   { out: "story-2.webp", src: "DSC04688-2.JPG", long: 1500, quality: 82 },
@@ -51,13 +80,6 @@ const SLOTS = [
   { out: "story-5.webp", src: "IMG_9324.JPG", long: 1500, quality: 82 },
   { out: "story-6.webp", src: "DSC05058.jpeg", long: 1500, quality: 82 },
 ];
-
-/**
- * The Couple section's portrait predates this selection and was not part of it.
- * story-1.webp used to hold it and is now a marquee slot, so the file is
- * promoted to a name of its own before being overwritten above.
- */
-const PRESERVE = { from: "story-1.webp", to: "couple.webp" };
 
 const kb = (n) => `${(n / 1024).toFixed(0)}KB`;
 
@@ -74,31 +96,25 @@ if (problems) {
   process.exit(1);
 }
 
-// --- preserve the Couple portrait ---------------------------------------
-const preserveFrom = path.join(OUT, PRESERVE.from);
-const preserveTo = path.join(OUT, PRESERVE.to);
-if (fs.existsSync(preserveTo)) {
-  console.log(`· ${PRESERVE.to} already exists — leaving it alone`);
-} else if (fs.existsSync(preserveFrom)) {
-  console.log(`· ${PRESERVE.from} → ${PRESERVE.to} (before it is overwritten)`);
-  if (COMMIT) fs.copyFileSync(preserveFrom, preserveTo);
-} else {
-  console.error(`✗ ${PRESERVE.from} is gone and ${PRESERVE.to} was never made.`);
-  process.exit(1);
-}
-
 // --- encode --------------------------------------------------------------
-for (const { out, src, long, quality } of SLOTS) {
+for (const { out, src, crop, long, quality } of SLOTS) {
   const meta = await sharp(path.join(SRC, src)).metadata();
-  const portrait = meta.height >= meta.width;
-  const resize = portrait ? { height: long } : { width: long };
+  // The crop decides the shape when there is one, so measure it, not the
+  // original — otherwise an upright crop out of a wide frame resizes by the
+  // wrong edge and lands at the wrong size.
+  const { width: w, height: h } = crop ?? meta;
+  const resize = h >= w ? { height: long } : { width: long };
 
   const pipeline = sharp(path.join(SRC, src))
     // Honours the EXIF orientation flag some of the iPhone frames carry, so
-    // a photo that looks upright in Finder does not land on its side.
-    .rotate()
-    .resize({ ...resize, withoutEnlargement: true })
-    .webp({ quality });
+    // a photo that looks upright in Finder does not land on its side. Before
+    // the extract, so `crop` is in upright pixels — the ones you measure off
+    // the photo as you see it.
+    .rotate();
+
+  if (crop) pipeline.extract(crop);
+
+  pipeline.resize({ ...resize, withoutEnlargement: true }).webp({ quality });
 
   const buf = await pipeline.toBuffer();
   const { width, height } = await sharp(buf).metadata();

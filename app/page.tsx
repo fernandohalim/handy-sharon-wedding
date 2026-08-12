@@ -3,6 +3,8 @@
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { coverVideo } from "@/lib/images";
+import { start as startMusic } from "@/lib/music";
+import MusicToggle from "@/components/ui/MusicToggle";
 import Cover from "@/components/Cover";
 import Hero from "@/components/Hero";
 import Couple from "@/components/Couple";
@@ -31,7 +33,17 @@ export default function Page() {
     <main className="bg-transparent">
       <AnimatePresence>
         {!opened && (
-          <Cover key="cover" guest={guest} onOpen={() => setOpened(true)} />
+          <Cover
+            key="cover"
+            guest={guest}
+            /* startMusic() runs here, inside the tap itself, and not in an
+               effect keyed off `opened` — browsers only grant permission to
+               play sound to the gesture, and by the next render it is gone. */
+            onOpen={() => {
+              startMusic();
+              setOpened(true);
+            }}
+          />
         )}
       </AnimatePresence>
 
@@ -43,7 +55,7 @@ export default function Page() {
           opened: the sections underneath need the dark ground to be readable
           from the start, and the footage is far too heavy to pull down for a
           visitor who is still looking at the cover. */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-ink">
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-black">
         {opened && (
           <video
             className="h-full w-full object-cover"
@@ -64,8 +76,13 @@ export default function Page() {
             never does. Light text carries an `on-film` shadow on top of
             this, which hugs the glyphs instead of laying down a shape.
             This value is the contrast knob: lower it for a more vivid
-            film, raise it if type still fights bright frames. */}
-        <div className="absolute inset-0 bg-ink/60" />
+            film, raise it if type still fights bright frames.
+
+            Neutral black, not `ink`: the navy tinted the whole film blue,
+            which the couple did not want. Every other scrim laid over the
+            film (Hero's bottom gradient, the Story strip's feathered
+            edges) is neutral for the same reason — keep them in step. */}
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
       {/* The invitation is always in the DOM. Gating it behind `opened` meant a
@@ -94,6 +111,10 @@ export default function Page() {
         <Wishes active={opened} />
         <Footer />
       </div>
+
+      {/* Only once the invitation is open — there is nothing to toggle while
+          the cover is up, and it would sit over the "Tap to Begin" cue. */}
+      {opened && <MusicToggle />}
     </main>
   );
 }

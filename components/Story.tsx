@@ -114,8 +114,15 @@ export default function Story() {
         viewport={{ once: true }}
         transition={{ duration: 1.2, ease }}
       >
+        {/* `w-max shrink-0` is load-bearing, not tidying. A translate of -50%
+            is 50% of *this element's own* width, and the loop is only seamless
+            if that lands exactly on one Row. As a flex child it would
+            otherwise shrink to the viewport, so -50% meant half a screen — the
+            strip snapped back with the first Row still part-way across and a
+            gap where the second should have been. Sizing the track to its
+            content makes -50% one Row again, exactly. */}
         <motion.div
-          className="flex h-full"
+          className="flex h-full w-max shrink-0"
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: SPEED, ease: "linear", repeat: Infinity }}
         >
@@ -133,7 +140,7 @@ export default function Story() {
         className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28"
         style={{
           background:
-            "linear-gradient(to right, rgba(15,20,33,0.85), rgba(15,20,33,0))",
+            "linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0))",
         }}
       />
       <div
@@ -141,7 +148,7 @@ export default function Story() {
         className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28"
         style={{
           background:
-            "linear-gradient(to left, rgba(15,20,33,0.85), rgba(15,20,33,0))",
+            "linear-gradient(to left, rgba(0,0,0,0.85), rgba(0,0,0,0))",
         }}
       />
     </section>

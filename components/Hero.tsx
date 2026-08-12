@@ -94,7 +94,7 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "linear-gradient(to top, rgba(15,20,33,0.55) 0%, rgba(15,20,33,0.12) 32%, rgba(15,20,33,0) 50%)",
+            "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.12) 32%, rgba(0,0,0,0) 50%)",
         }}
       />
 

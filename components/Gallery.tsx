@@ -78,13 +78,18 @@ function GalleryItem({
         }}
         transition={{ duration: 1.2, ease }}
       >
+        {/* No `soft-tone` here, deliberately. The desaturation reads as a
+            wash over a wall of photographs, and the lightbox — which shows
+            the same file untouched — made it obvious: the grid looked pale
+            next to the version it opens into. The tiles and the lightbox now
+            show the same photograph. */}
         <div className={`${aspect} w-full overflow-hidden`}>
           <img
             src={src}
             alt={altFor(caption)}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover soft-tone transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
+            className="h-full w-full object-cover transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
           />
         </div>
       </motion.div>
