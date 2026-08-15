@@ -14,40 +14,70 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const altFor = (index: string) =>
   `${wedding.groom.name} and ${wedding.bride.name} prewedding photograph ${index}`;
 
-/** One entry per photograph. The set is portrait 2:3 throughout except
- *  gallery-2, so that is the only landscape slot — the rest stay
- *  portrait-leaning to keep object-cover from cropping into faces. */
-const ASPECTS = [
-  "aspect-[3/4]",
-  "aspect-[4/3]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
-  "aspect-[2/3]",
-  "aspect-[3/4]",
-  "aspect-[4/5]",
+/** One [width, height] per photograph. The set is portrait 2:3 throughout
+ *  except gallery-2, so that is the only landscape slot — the rest stay
+ *  portrait-leaning to keep object-cover from cropping into faces.
+ *
+ *  These are applied as an inline aspect-ratio rather than a Tailwind class:
+ *  the ratios are also what the column split below measures with, and Tailwind
+ *  only emits arbitrary classes it can find as literal text in the source. */
+const ASPECTS: readonly (readonly [number, number])[] = [
+  [3, 4],
+  [4, 3],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [2, 3],
+  [3, 4],
+  [4, 5],
 ];
+
+const ratioOf = (i: number) => ASPECTS[i % ASPECTS.length];
+
+/** Assign each photograph to whichever column is currently shortest.
+ *
+ *  This replaces CSS multi-column. `columns-2` left the balancing to the
+ *  browser, and Safari on iOS would push an `overflow-hidden`
+ *  `break-inside-avoid` tile to the next column and strand a column-height
+ *  hole behind it. Splitting the photographs ourselves is deterministic —
+ *  same result in every engine, and identical on server and client since it
+ *  depends only on the constants above. */
+function splitIntoColumns(total: number, count: number) {
+  const cols: number[][] = Array.from({ length: count }, () => []);
+  const heights = new Array<number>(count).fill(0);
+
+  for (let i = 0; i < total; i++) {
+    const [w, h] = ratioOf(i);
+    let shortest = 0;
+    for (let c = 1; c < count; c++) {
+      if (heights[c] < heights[shortest]) shortest = c;
+    }
+    cols[shortest].push(i);
+    heights[shortest] += h / w;
+  }
+  return cols;
+}
 
 function GalleryItem({
   src,
-  aspect,
+  ratio,
   index,
   onOpen,
 }: {
   src: string;
-  aspect: string;
+  ratio: readonly [number, number];
   index: string;
   onOpen: () => void;
 }) {
@@ -57,7 +87,7 @@ function GalleryItem({
   return (
     <div
       ref={ref}
-      className="group relative mb-4 block w-full cursor-pointer break-inside-avoid overflow-hidden sm:mb-5 lg:mb-6"
+      className="group relative block w-full cursor-pointer overflow-hidden"
       onClick={onOpen}
       role="button"
       tabIndex={0}
@@ -81,7 +111,10 @@ function GalleryItem({
             the same file untouched — made it obvious: the grid looked pale
             next to the version it opens into. The tiles and the lightbox now
             show the same photograph. */}
-        <div className={`${aspect} w-full overflow-hidden`}>
+        <div
+          className="w-full overflow-hidden"
+          style={{ aspectRatio: `${ratio[0]} / ${ratio[1]}` }}
+        >
           <img
             src={src}
             alt={altFor(index)}
@@ -116,6 +149,31 @@ function GalleryItem({
           </svg>
         </div>
       </div>
+    </div>
+  );
+}
+
+const COLUMNS_NARROW = splitIntoColumns(images.gallery.length, 2);
+const COLUMNS_WIDE = splitIntoColumns(images.gallery.length, 3);
+
+function GalleryColumn({
+  indices,
+  onOpen,
+}: {
+  indices: number[];
+  onOpen: (i: number) => void;
+}) {
+  return (
+    <div className="flex flex-1 flex-col gap-4 sm:gap-5 lg:gap-6">
+      {indices.map((i) => (
+        <GalleryItem
+          key={i}
+          src={images.gallery[i]}
+          ratio={ratioOf(i)}
+          index={String(i + 1).padStart(2, "0")}
+          onOpen={() => onOpen(i)}
+        />
+      ))}
     </div>
   );
 }
@@ -294,16 +352,21 @@ export default function Gallery() {
         </p>
       </div>
 
-      <div className="mx-auto mt-16 max-w-6xl columns-2 gap-4 sm:gap-5 lg:columns-3 lg:gap-6">
-        {images.gallery.map((src, i) => (
-          <GalleryItem
-            key={i}
-            src={src}
-            aspect={ASPECTS[i % ASPECTS.length]}
-            index={String(i + 1).padStart(2, "0")}
-            onOpen={() => setOpen(i)}
-          />
-        ))}
+      {/* Two arrangements of the same photographs — the narrow one is laid out
+          in two columns, the wide one in three. Only one is ever displayed, and
+          the hidden set costs nothing to speak of: `display: none` keeps the
+          browser from fetching its lazy images. */}
+      <div className="mx-auto mt-16 max-w-6xl">
+        <div className="flex gap-4 sm:gap-5 lg:hidden">
+          {COLUMNS_NARROW.map((col, c) => (
+            <GalleryColumn key={c} indices={col} onOpen={setOpen} />
+          ))}
+        </div>
+        <div className="hidden gap-6 lg:flex">
+          {COLUMNS_WIDE.map((col, c) => (
+            <GalleryColumn key={c} indices={col} onOpen={setOpen} />
+          ))}
+        </div>
       </div>
 
       <AnimatePresence>
