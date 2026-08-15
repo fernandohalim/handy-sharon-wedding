@@ -94,7 +94,7 @@ export default function Couple() {
           <div className="relative flex flex-col gap-8 lg:block">
             <ImageReveal
               src={images.couple}
-              alt={`${wedding.groom.fullName} and ${wedding.bride.fullName} on the harbour steps at sunrise, from their prewedding shoot`}
+              alt={`${wedding.groom.fullName} and ${wedding.bride.fullName} on the Opera House steps, from their prewedding shoot`}
               speed={9}
               className="aspect-[4/5] w-full lg:aspect-auto lg:h-[88vh] lg:w-[58%]"
             />

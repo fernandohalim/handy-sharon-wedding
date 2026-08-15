@@ -9,46 +9,44 @@ import { FloralSprig } from "@/components/ui/Floral";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-/** Alt text carries the names as well as the caption, so the photographs are
- *  findable in image search instead of being sixteen anonymous "First Light"s. */
-const altFor = (caption: string) =>
-  `${caption} — ${wedding.groom.name} and ${wedding.bride.name} prewedding photograph`;
+/** The captions are gone, but the alt text still carries the names and the
+ *  plate number so the photographs stay findable in image search. */
+const altFor = (index: string) =>
+  `${wedding.groom.name} and ${wedding.bride.name} prewedding photograph ${index}`;
 
-const CAPTIONS = [
-  "First Light",
-  "The Promenade",
-  "Hand in Hand",
-  "Stillness",
-  "Golden Hour",
-  "Across the Water",
-  "A Quiet Moment",
-  "Side by Side",
-  "The Promise",
-  "Forever Begins",
-];
-
+/** One entry per photograph. The set is portrait 2:3 throughout except
+ *  gallery-2, so that is the only landscape slot — the rest stay
+ *  portrait-leaning to keep object-cover from cropping into faces. */
 const ASPECTS = [
   "aspect-[3/4]",
   "aspect-[4/3]",
-  "aspect-square",
+  "aspect-[2/3]",
   "aspect-[3/4]",
-  "aspect-[5/4]",
   "aspect-[4/5]",
+  "aspect-[2/3]",
   "aspect-[3/4]",
-  "aspect-square",
-  "aspect-[4/3]",
+  "aspect-[4/5]",
+  "aspect-[2/3]",
   "aspect-[3/4]",
+  "aspect-[4/5]",
+  "aspect-[2/3]",
+  "aspect-[3/4]",
+  "aspect-[4/5]",
+  "aspect-[2/3]",
+  "aspect-[3/4]",
+  "aspect-[4/5]",
+  "aspect-[2/3]",
+  "aspect-[3/4]",
+  "aspect-[4/5]",
 ];
 
 function GalleryItem({
   src,
-  caption,
   aspect,
   index,
   onOpen,
 }: {
   src: string;
-  caption: string;
   aspect: string;
   index: string;
   onOpen: () => void;
@@ -69,7 +67,7 @@ function GalleryItem({
           onOpen();
         }
       }}
-      aria-label={`View ${caption}`}
+      aria-label={`View photograph ${index}`}
     >
       <motion.div
         initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
@@ -86,7 +84,7 @@ function GalleryItem({
         <div className={`${aspect} w-full overflow-hidden`}>
           <img
             src={src}
-            alt={altFor(caption)}
+            alt={altFor(index)}
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover transition-transform duration-[1100ms] ease-editorial group-hover:scale-[1.07]"
@@ -98,10 +96,7 @@ function GalleryItem({
       <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
         <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-transparent to-transparent" />
         <div className="absolute inset-3 border border-ivory/30" />
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
-          <span className="text-[11px] uppercase tracking-[0.28em] text-ivory">
-            {caption}
-          </span>
+        <div className="absolute inset-x-0 bottom-0 flex items-end justify-end p-5">
           <span className="font-serif text-2xl italic text-ivory/85">
             {index}
           </span>
@@ -227,14 +222,11 @@ function Lightbox({
         <div className="border border-ivory/25 p-2">
           <img
             src={images.gallery[index]}
-            alt={altFor(CAPTIONS[index % CAPTIONS.length])}
+            alt={altFor(String(index + 1).padStart(2, "0"))}
             className="max-h-[76vh] w-auto object-contain"
           />
         </div>
-        <figcaption className="mt-4 flex items-center gap-4 text-ivory">
-          <span className="text-[11px] uppercase tracking-[0.28em] text-ivory/80">
-            {CAPTIONS[index % CAPTIONS.length]}
-          </span>
+        <figcaption className="mt-4 flex items-center justify-center text-ivory">
           <span className="text-[11px] tracking-[0.2em] text-ivory/75">
             {String(index + 1).padStart(2, "0")} / {images.gallery.length}
           </span>
@@ -307,7 +299,6 @@ export default function Gallery() {
           <GalleryItem
             key={i}
             src={src}
-            caption={CAPTIONS[i % CAPTIONS.length]}
             aspect={ASPECTS[i % ASPECTS.length]}
             index={String(i + 1).padStart(2, "0")}
             onOpen={() => setOpen(i)}

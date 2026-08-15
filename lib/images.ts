@@ -55,24 +55,9 @@ export const images = USE_PLACEHOLDERS
         local("story-5.webp"),
         local("story-6.webp"),
       ],
-      gallery: [
-        local("gallery-1.webp"),
-        local("gallery-2.webp"),
-        local("gallery-3.webp"),
-        local("gallery-4.webp"),
-        local("gallery-5.webp"),
-        local("gallery-6.webp"),
-        local("gallery-7.webp"),
-        local("gallery-8.webp"),
-        local("gallery-9.webp"),
-        local("gallery-10.webp"),
-        local("gallery-11.webp"),
-        local("gallery-12.webp"),
-        local("gallery-13.webp"),
-        local("gallery-14.webp"),
-        local("gallery-15.webp"),
-        local("gallery-16.webp"),
-      ],
+      /** Fixed shuffle of the client's set — deliberately not randomised at
+       *  runtime, which would desync the server and client renders. */
+      gallery: Array.from({ length: 20 }, (_, i) => local(`gallery-${i + 1}.webp`)),
     };
 
 /**
