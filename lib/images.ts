@@ -60,6 +60,39 @@ export const images = USE_PLACEHOLDERS
       gallery: Array.from({ length: 20 }, (_, i) => local(`gallery-${i + 1}.webp`)),
     };
 
+/** Narrow copies written beside each photograph by scripts/generate-image-sizes.mjs.
+ *  Keep in sync with WIDTHS there. The 1200px original is the largest step. */
+const GALLERY_WIDTHS = [400, 800] as const;
+const GALLERY_INTRINSIC_WIDTH = 1200;
+
+/** The candidate widths for one gallery photograph.
+ *
+ *  Placeholder mode serves remote Picsum URLs, which have no variants beside
+ *  them — returning undefined there leaves the plain `src` to do the work. */
+export function gallerySrcSet(src: string): string | undefined {
+  if (!src.startsWith("/images/")) return undefined;
+  const base = src.replace(/\.webp$/, "");
+  return [
+    ...GALLERY_WIDTHS.map((w) => `${base}-${w}.webp ${w}w`),
+    `${src} ${GALLERY_INTRINSIC_WIDTH}w`,
+  ].join(", ");
+}
+
+/** How wide a gallery tile actually renders, mirroring the column layout in
+ *  components/Gallery.tsx: two columns below `lg` and three above, inside a
+ *  max-w-6xl (1152px) container with px-6 / sm:px-10 padding.
+ *
+ *  - < 640px   px-6 (24) + gap-4 (16) -> (100vw - 64) / 2
+ *  - >= 640px  px-10 (40) + gap-5 (20) -> (100vw - 100) / 2
+ *  - >= 1024px three columns, gap-6 (24 x 2) -> (100vw - 128) / 3
+ *  - >= 1232px the container stops growing -> (1152 - 48) / 3 = 368px */
+export const GALLERY_SIZES = [
+  "(min-width: 1232px) 368px",
+  "(min-width: 1024px) calc((100vw - 128px) / 3)",
+  "(min-width: 640px) calc(50vw - 50px)",
+  "calc(50vw - 32px)",
+].join(", ");
+
 /**
  * Cover background film — muted, autoplaying loop shown on the opening screen.
  * Poster is a still frame used before the video loads / if it can't play.

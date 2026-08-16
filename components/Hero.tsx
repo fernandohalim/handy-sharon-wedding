@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { wedding } from "@/lib/config";
-import { images } from "@/lib/images";
+import { gallerySrcSet, images } from "@/lib/images";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -300,6 +300,11 @@ export default function Hero() {
             <div className="relative h-44 w-36 overflow-hidden">
               <motion.img
                 src={images.gallery[2]}
+                srcSet={gallerySrcSet(images.gallery[2])}
+                /* Fixed at w-36 (144px) on the only breakpoint that shows it,
+                   so the width is stated outright rather than as a viewport
+                   fraction: 400w covers 2x, 800w covers 3x. */
+                sizes="144px"
                 alt={`${wedding.groom.name} and ${wedding.bride.name} — prewedding portrait`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover soft-tone"

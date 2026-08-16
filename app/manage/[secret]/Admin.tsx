@@ -61,14 +61,18 @@ function formatDateTime(ms: number | null): string {
 function buildShareMessage(slug: string, name: string): string {
   const url = `${window.location.origin}/?to=${slug}`;
   return `Dear ${name},
+With all due respect, We would be honored by your presence.
 
-We are getting married — ${wedding.groom.name} & ${wedding.bride.name}, on ${wedding.dateShort} in ${wedding.venue.area}. We would be honored by your presence.
+We are getting married — ${wedding.groom.name} & ${wedding.bride.name}, on ${wedding.dateShort} in ${wedding.venue.area}.
 
 Please open your personal invitation here:
 ${url}
 
+Note: Please confirm your presence via RSVP no later than October 1st, 2026
+
 With love,
-${wedding.groom.name} & ${wedding.bride.name}`;
+${wedding.groom.name} & ${wedding.bride.name}
+${wedding.hashtag}`;
 }
 
 export default function Admin({

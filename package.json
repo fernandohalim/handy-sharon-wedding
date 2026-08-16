@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "images": "node scripts/generate-image-sizes.mjs",
+    "prebuild": "npm run images",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

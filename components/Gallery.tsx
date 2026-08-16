@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "motion/react";
-import { images } from "@/lib/images";
+import { GALLERY_SIZES, gallerySrcSet, images } from "@/lib/images";
 import { wedding } from "@/lib/config";
 import MaskText from "@/components/ui/MaskText";
 import { FloralSprig } from "@/components/ui/Floral";
@@ -117,6 +117,8 @@ function GalleryItem({
         >
           <img
             src={src}
+            srcSet={gallerySrcSet(src)}
+            sizes={GALLERY_SIZES}
             alt={altFor(index)}
             loading="lazy"
             decoding="async"

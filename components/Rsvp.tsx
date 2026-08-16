@@ -362,7 +362,7 @@ export default function Rsvp() {
                     )}
 
                     <p className="mt-5 text-center text-[10px] uppercase tracking-[0.26em] text-stone/70">
-                      Kindly respond before the 1st of November, 2026
+                      Kindly respond before the 1st of October, 2026
                     </p>
                   </motion.div>
                 )}
