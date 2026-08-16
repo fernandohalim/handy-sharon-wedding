@@ -58,9 +58,13 @@ function formatDateTime(ms: number | null): string {
 }
 
 // Called only inside event handlers, so window is always defined.
+//
+// The asterisks are WhatsApp's bold markup: it renders *text* in bold and eats
+// the markers. They stay literal anywhere else, so this string is meant for
+// WhatsApp — the copy button hands over the same text for pasting there.
 function buildShareMessage(slug: string, name: string): string {
   const url = `${window.location.origin}/?to=${slug}`;
-  return `Dear ${name},
+  return `Dear *${name}*,
 With all due respect, We would be honored by your presence.
 
 We are getting married — ${wedding.groom.name} & ${wedding.bride.name}, on ${wedding.dateShort} in ${wedding.venue.area}.
@@ -68,7 +72,7 @@ We are getting married — ${wedding.groom.name} & ${wedding.bride.name}, on ${w
 Please open your personal invitation here:
 ${url}
 
-Note: Please confirm your presence via RSVP no later than October 1st, 2026
+Note: Please confirm your presence via RSVP no later than *October 1st, 2026*
 
 With love,
 ${wedding.groom.name} & ${wedding.bride.name}
