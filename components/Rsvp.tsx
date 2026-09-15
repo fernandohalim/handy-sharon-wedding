@@ -27,17 +27,23 @@ export default function Rsvp() {
   const [pax, setPax] = useState(1);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-  const [checking, setChecking] = useState(true);
+  const [checkedSlug, setCheckedSlug] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
+
+  // Which slug the Firestore lookup below has settled for. Derived rather than
+  // a plain `checking` boolean because `guest.slug` resolves asynchronously:
+  // a boolean set to false for the "default" slug stays false through the
+  // switch to the real one, briefly declaring "nothing on file" for a guest
+  // whose RSVP had not been fetched yet.
+  const checking = checkedSlug !== guest.slug;
 
   // Cross-browser lock: look up an existing RSVP in Firestore. If one exists,
   // hydrate the confirmation view so the form can't be filled in again.
   useEffect(() => {
     if (guest.slug === "default") {
-      setChecking(false);
+      setCheckedSlug("default");
       return;
     }
-    setChecking(true);
     let active = true;
     fetchRsvp(guest.slug)
       .then((r) => {
@@ -47,7 +53,7 @@ export default function Rsvp() {
       })
       .catch(() => {})
       .finally(() => {
-        if (active) setChecking(false);
+        if (active) setCheckedSlug(guest.slug);
       });
     return () => {
       active = false;
