@@ -47,3 +47,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# guest data exports for the clients (names, RSVPs, messages)
+/exports

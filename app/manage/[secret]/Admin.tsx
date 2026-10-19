@@ -72,8 +72,6 @@ We are getting married — ${wedding.groom.name} & ${wedding.bride.name}, on ${w
 Please open your personal invitation here:
 ${url}
 
-Note: Please confirm your presence via RSVP no later than *October 1st, 2026*
-
 With love,
 ${wedding.groom.name} & ${wedding.bride.name}
 ${wedding.hashtag}`;
